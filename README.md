@@ -1,2 +1,3 @@
-# artallthewaydown
-The website for art all the way down - a generative art project by Frank Hampus Weslien.
+# Frank Hampus Weslien's personal website
+
+This website gathers all projects by Frank Hampus Weslien into one place.
