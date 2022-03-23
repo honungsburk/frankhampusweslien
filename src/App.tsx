@@ -12,6 +12,7 @@ import Layout from "./Layout";
 const Home = lazy(() => import("./Pages/Home"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const Work = lazy(() => import("./Pages/Work"));
+const Art = lazy(() => import("./Pages/Art"));
 
 declare global {
   interface Window {
@@ -35,6 +36,14 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route
+              path="/art"
+              element={
+                <PageErrorBoundary>
+                  <Art />
+                </PageErrorBoundary>
+              }
+            />
             <Route
               path="/work"
               element={
