@@ -5,6 +5,7 @@ import {
   Center,
   Heading,
   HStack,
+  Link,
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -85,9 +86,15 @@ function CVExperience(props: {
 
 function DownloadCV(): JSX.Element {
   return (
-    <Center bg="secondary.100" border="2px" px={2}>
-      <Text fontWeight={"bold"}>DOWNLOAD CV</Text>
-    </Center>
+    <Link
+      href="https://drive.google.com/drive/folders/1Lqw569wZTm4MrrIP19nnZZQCnlV4MbFk?usp=sharing"
+      _hover={{}}
+      target="_blank"
+    >
+      <Center bg="secondary.100" border="2px" px={2}>
+        <Text fontWeight={"bold"}>DOWNLOAD CV</Text>
+      </Center>
+    </Link>
   );
 }
 
