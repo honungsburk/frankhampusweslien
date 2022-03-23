@@ -1,36 +1,58 @@
 import defaultTheme from "@chakra-ui/theme";
-import { StyleFunctionProps } from "@chakra-ui/theme-tools";
+import { inputAnatomy as parts } from "@chakra-ui/anatomy";
+import { StyleFunctionProps, PartsStyleFunction } from "@chakra-ui/theme-tools";
+import { getColor, mode } from "@chakra-ui/theme-tools";
 import colors from "../colors";
-import { mode } from "@chakra-ui/theme-tools";
+
+function getDefaults(props: Record<string, any>) {
+  const { focusBorderColor: fc, errorBorderColor: ec } = props;
+  return {
+    focusBorderColor: fc || mode("blue.500", "blue.300")(props),
+    errorBorderColor: ec || mode("red.500", "red.300")(props),
+  };
+}
+
+const variantBrutalist: PartsStyleFunction<typeof parts> = (
+  props: StyleFunctionProps
+) => {
+  const { theme } = props;
+  const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props);
+
+  return {
+    field: {
+      rounded: "0",
+      border: "2px solid",
+      borderColor: mode("#000", "#fff")(props),
+      bg: "inherit",
+      _readOnly: {
+        boxShadow: "none !important",
+        userSelect: "all",
+      },
+      _disabled: {
+        opacity: 0.4,
+        cursor: "not-allowed",
+      },
+      _invalid: {
+        borderColor: getColor(theme, ec),
+        boxShadow: `0 0 0 1px ${getColor(theme, ec)}`,
+      },
+      _focus: {
+        zIndex: 1,
+        borderColor: getColor(theme, fc),
+        boxShadow: `0 0 0 1px ${getColor(theme, fc)}`,
+      },
+    },
+    addon: {
+      border: "1px solid",
+      borderColor: mode("inherit", "whiteAlpha.50")(props),
+      bg: mode("gray.100", "whiteAlpha.300")(props),
+    },
+  };
+};
 
 const input = {
   variants: {
-    outline: (props: StyleFunctionProps) => ({
-      ...defaultTheme.components.Input.variants.outline(props),
-      field: {
-        ...defaultTheme.components.Input.variants.outline(props).field,
-        borderWidth: 2,
-        borderColor: mode(
-          colors.accent.default,
-          colors.accentDarkMode.default
-        )(props),
-        color: mode(
-          colors.accent.default,
-          colors.accentDarkMode.default
-        )(props),
-        _hover: {
-          borderColor: mode(
-            colors.accent[800],
-            colors.accentDarkMode[200]
-          )(props),
-          color: mode(colors.black, colors.white)(props),
-        },
-        _focus: {
-          color: mode(colors.black, colors.white)(props),
-        },
-      },
-    }),
-    filled: {},
+    brutalist: variantBrutalist,
   },
   defaultProps: {
     focusBorderColor: colors.primary[500],

@@ -13,6 +13,7 @@ const Home = lazy(() => import("./Pages/Home"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const Work = lazy(() => import("./Pages/Work"));
 const Art = lazy(() => import("./Pages/Art"));
+const FAQ = lazy(() => import("./Pages/FAQ"));
 
 declare global {
   interface Window {
@@ -36,6 +37,14 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route
+              path="/faq"
+              element={
+                <PageErrorBoundary>
+                  <FAQ />
+                </PageErrorBoundary>
+              }
+            />
             <Route
               path="/art"
               element={

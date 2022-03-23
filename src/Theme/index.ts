@@ -2,7 +2,8 @@ import { mode } from "@chakra-ui/theme-tools";
 import { extendTheme } from "@chakra-ui/react";
 import colors from "./colors";
 import { Dict } from "@chakra-ui/utils";
-import { menu } from "./components/menu";
+import input from "./components/input";
+
 const global = (props: Dict<any>) => ({
   body: {
     color: mode("black", "white")(props),
@@ -38,6 +39,7 @@ export const Theme = extendTheme({
     global: global,
   },
   components: {
+    Input: input,
   },
   colors: colors,
   shadows,
