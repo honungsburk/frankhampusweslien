@@ -10,12 +10,14 @@ import {
   useDisclosure,
   Container,
 } from "@chakra-ui/react";
+import AtomicSwapAd from "../Components/AtomicSwapAd";
 import * as Icons from "../Components/Icons";
 
 export default function FAQ(): JSX.Element {
   return (
     <Container maxW="container.lg">
-      <VStack mt={8}>
+      <VStack mt={8} spacing={4}>
+        <AtomicSwapAd />
         <FAQItem header="is it safe to buy nfts">
           <Text>Totaly, it is super safe</Text>
         </FAQItem>

@@ -2,7 +2,13 @@ import { Icon, IconProps } from "@chakra-ui/react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { IoMdWallet } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
-import { BiLinkExternal, BiCaretUp, BiCaretDown } from "react-icons/bi";
+import {
+  BiLinkExternal,
+  BiCaretUp,
+  BiCaretDown,
+  BiRightArrowAlt,
+  BiLeftArrowAlt,
+} from "react-icons/bi";
 import { BsLink45Deg, BsCheckCircleFill } from "react-icons/bs";
 
 // Social Media
@@ -48,4 +54,12 @@ export function CaretUp(props: IconProps) {
 
 export function CaretDown(props: IconProps) {
   return <Icon {...props} as={BiCaretDown} />;
+}
+
+export function LeftArrow(props: IconProps) {
+  return <Icon {...props} as={BiLeftArrowAlt} />;
+}
+
+export function RightArrow(props: IconProps) {
+  return <Icon {...props} as={BiRightArrowAlt} />;
 }
