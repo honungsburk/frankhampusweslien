@@ -11,6 +11,7 @@ import Layout from "./Layout";
 // Lazy load routes to allow for code splitting.
 const Home = lazy(() => import("./Pages/Home"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
+const Work = lazy(() => import("./Pages/Work"));
 
 declare global {
   interface Window {
@@ -33,13 +34,15 @@ function App() {
     <PageErrorBoundary>
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout
-              />
-            }
-          >
+          <Route path="/" element={<Layout />}>
+            <Route
+              path="/work"
+              element={
+                <PageErrorBoundary>
+                  <Work />
+                </PageErrorBoundary>
+              }
+            />
             <Route
               path="/home"
               element={

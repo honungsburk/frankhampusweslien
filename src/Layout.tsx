@@ -12,6 +12,7 @@ import {
   VStack,
   AlertIcon,
   useColorModeValue,
+  Container,
 } from "@chakra-ui/react";
 import { Link as ReachLink, Outlet } from "react-router-dom";
 import * as Icons from "./Components/Icons";
@@ -51,10 +52,27 @@ function Header(props: {}) {
   });
 
   return (
-    <Flex p={2} align={"center"}>
-      <Logo></Logo>
-      <Spacer />
-    </Flex>
+    <Container maxW="container.xl">
+      <Flex p={2} align={"center"}>
+        <Logo></Logo>
+        <Spacer />
+        <HStack spacing={4}>
+          <HeaderLink to="/home#projects">Projects</HeaderLink>
+          <HeaderLink to="/work">Work</HeaderLink>
+          <HeaderLink to="/home#about">About</HeaderLink>
+          <HeaderLink to="/faq">FAQ</HeaderLink>
+          <HeaderLink to="/art">Art</HeaderLink>
+        </HStack>
+      </Flex>
+    </Container>
+  );
+}
+
+function HeaderLink(props: { children: string; to: string }) {
+  return (
+    <Link as={ReachLink} to={props.to}>
+      <Text fontWeight={"bold"}>{props.children.toUpperCase()}</Text>
+    </Link>
   );
 }
 
