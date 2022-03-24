@@ -36,7 +36,15 @@ function App() {
     <PageErrorBoundary>
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route
+            path="/"
+            element={
+              <Layout
+                onWalletChange={(wallet) => setWallet(wallet)}
+                lib={CardanoSerializationLib}
+              />
+            }
+          >
             <Route
               path="/faq"
               element={

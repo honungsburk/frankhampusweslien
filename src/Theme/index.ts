@@ -3,6 +3,7 @@ import { extendTheme } from "@chakra-ui/react";
 import colors from "./colors";
 import { Dict } from "@chakra-ui/utils";
 import input from "./components/input";
+import button from "./components/button";
 
 const global = (props: Dict<any>) => ({
   body: {
@@ -11,27 +12,27 @@ const global = (props: Dict<any>) => ({
   },
 
   /* Scrollbar */
-  "::-webkit-scrollbar": {
-    width: "8px",
-  },
+  // "::-webkit-scrollbar": {
+  //   width: "8px",
+  // },
 
-  "::-webkit-scrollbar-track": {
-    background: mode("rgba(0, 0, 0, 0.1)", "rgba(255, 255, 255, 0.1)")(props),
-    borderRadius: "40px",
-  },
+  // "::-webkit-scrollbar-track": {
+  //   background: mode("rgba(0, 0, 0, 0.1)", "rgba(255, 255, 255, 0.1)")(props),
+  //   borderRadius: "40px",
+  // },
 
-  "::-webkit-scrollbar-thumb": {
-    borderRadius: "40px",
-    background: mode("rgba(0, 0, 0, 0.4)", "rgba(255, 255, 255, 0.4)")(props),
-  },
+  // "::-webkit-scrollbar-thumb": {
+  //   borderRadius: "40px",
+  //   background: mode("rgba(0, 0, 0, 0.4)", "rgba(255, 255, 255, 0.4)")(props),
+  // },
 
-  "::-webkit-scrollbar-thumb:hover": {
-    background: mode("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)")(props),
-  },
+  // "::-webkit-scrollbar-thumb:hover": {
+  //   background: mode("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)")(props),
+  // },
 });
 
 const shadows = {
-  outline: "0 0 0 3px " + colors.primary[300],
+  outline: "0 0 0 2px " + colors.black,
 };
 
 export const Theme = extendTheme({
@@ -40,6 +41,7 @@ export const Theme = extendTheme({
   },
   components: {
     Input: input,
+    Button: button,
   },
   colors: colors,
   shadows,

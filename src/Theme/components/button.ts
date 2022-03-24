@@ -5,7 +5,6 @@ import { ComponentStyleConfig } from "@chakra-ui/react";
 
 const ghostIconButton = (props: StyleFunctionProps) => {
   return {
-    ...defaultTheme.components.Button.variants.ghost(props),
     _focus: {
       bg: mode("darken.200", "lighten.200")(props),
     },
@@ -17,6 +16,9 @@ const ghostIconButton = (props: StyleFunctionProps) => {
 };
 
 const button: ComponentStyleConfig = {
+  baseStyle: {
+    borderRadius: 0,
+  },
   variants: {
     ghost: ghostIconButton,
   },

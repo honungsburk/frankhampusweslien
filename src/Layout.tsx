@@ -16,9 +16,15 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReachLink, Outlet } from "react-router-dom";
 import * as Icons from "./Components/Icons";
+import TopNav from "./Components/TopNav";
 import React from "react";
+import { BasicWallet } from "cardano-web-bridge-wrapper";
+import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
 
-export default function Layout() {
+export default function Layout(props: {
+  onWalletChange: (wallet: BasicWallet) => void;
+  lib: typeof CardanoSerializationLib;
+}) {
   const [isHealthy, setIsHealthy] = React.useState(true);
 
   return (
@@ -26,7 +32,11 @@ export default function Layout() {
       <VStack w="full">
         {isHealthy ? <></> : <BackendIsDown />}
         <Box w="full">
-          <Header />
+          <TopNav
+            variant="background"
+            onWalletChange={props.onWalletChange}
+            lib={props.lib}
+          />
         </Box>
       </VStack>
       <Outlet />
@@ -42,48 +52,6 @@ function BackendIsDown() {
       <AlertIcon />
       The server is down! The site will not function properly.
     </Alert>
-  );
-}
-
-function Header(props: {}) {
-  const layout: "vertical" | "horizontal" | undefined = useBreakpointValue({
-    base: "vertical",
-    sm: "horizontal",
-  });
-
-  return (
-    <Container maxW="container.xl">
-      <Flex p={2} align={"center"}>
-        <Logo></Logo>
-        <Spacer />
-        <HStack spacing={4}>
-          <HeaderLink to="/home#projects">Projects</HeaderLink>
-          <HeaderLink to="/work">Work</HeaderLink>
-          <HeaderLink to="/home#about">About</HeaderLink>
-          <HeaderLink to="/faq">FAQ</HeaderLink>
-          <HeaderLink to="/art">Art</HeaderLink>
-        </HStack>
-      </Flex>
-    </Container>
-  );
-}
-
-function HeaderLink(props: { children: string; to: string }) {
-  return (
-    <Link as={ReachLink} to={props.to}>
-      <Text fontWeight={"bold"}>{props.children.toUpperCase()}</Text>
-    </Link>
-  );
-}
-
-function Logo() {
-  return (
-    <Center>
-      <Link as={ReachLink} to="/home">
-        <Text> LOGO</Text>
-        {/* <AtomicSwapLogo boxSize="48px" /> */}
-      </Link>
-    </Center>
   );
 }
 
