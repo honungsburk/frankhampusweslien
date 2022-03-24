@@ -19,6 +19,7 @@ import * as Icons from "../Components/Icons";
 import TopNav from "../Components/TopNav";
 import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
 import RepeatingImage from "../assets/img/background/circles.png";
+import Footer from "../Components/Footer";
 
 export default function Home(props: {
   wallet?: BasicWallet;
@@ -46,7 +47,10 @@ export default function Home(props: {
 
       <Projects />
 
-      <AboutMe />
+      <VStack backgroundImage={RepeatingImage} w="100%">
+        <AboutMe />
+        <Footer />
+      </VStack>
     </VStack>
   );
 }
@@ -169,14 +173,7 @@ function Project(props: { name: string; text: string; href: string }) {
 
 function AboutMe() {
   return (
-    <VStack
-      id="about"
-      backgroundImage={RepeatingImage}
-      w="100%"
-      pt={16}
-      pb={32}
-      spacing={8}
-    >
+    <VStack id="about" w="100%" py={16} spacing={8}>
       <Text textStyle="h2">ABOUT Me</Text>
       <HStack justifyItems={"center"} spacing={16}>
         <VStack maxWidth={"400px"}>

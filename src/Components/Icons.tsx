@@ -1,5 +1,12 @@
 import { Icon, IconProps } from "@chakra-ui/react";
-import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaDiscord } from "react-icons/fa";
+import {
+  FiTwitter,
+  FiYoutube,
+  FiLinkedin,
+  FiInstagram,
+  FiGithub,
+} from "react-icons/fi";
 import { AiFillWallet } from "react-icons/ai";
 import { MdContentCopy } from "react-icons/md";
 import {
@@ -17,12 +24,24 @@ export function Discord(props: IconProps) {
   return <Icon {...props} as={FaDiscord} />;
 }
 
+export function Github(props: IconProps) {
+  return <Icon {...props} as={FiGithub} />;
+}
+
 export function Youtube(props: IconProps) {
-  return <Icon {...props} as={FaYoutube} />;
+  return <Icon {...props} as={FiYoutube} />;
+}
+
+export function LinkedIn(props: IconProps) {
+  return <Icon {...props} as={FiLinkedin} />;
+}
+
+export function Instagram(props: IconProps) {
+  return <Icon {...props} as={FiInstagram} />;
 }
 
 export function Twitter(props: IconProps) {
-  return <Icon {...props} as={FaTwitter} />;
+  return <Icon {...props} as={FiTwitter} />;
 }
 
 // Wallet
