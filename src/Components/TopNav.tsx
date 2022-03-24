@@ -22,6 +22,7 @@ import RepeatingImage from "../assets/img/background/circles.png";
 import { BasicWallet } from "cardano-web-bridge-wrapper";
 import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
 import WalletSelector from "./WalletSelector";
+import { scrollToFragment } from "scroll-to-fragment";
 
 export default function TopNav(props: {
   variant: "background" | "empty";
@@ -39,9 +40,7 @@ export default function TopNav(props: {
           <Logo></Logo>
           <Spacer />
           <HStack spacing={4}>
-            <HeaderLink to="/home#projects">Projects</HeaderLink>
             <HeaderLink to="/work">Work</HeaderLink>
-            <HeaderLink to="/home#about">About</HeaderLink>
             <HeaderLink to="/faq">FAQ</HeaderLink>
             <HeaderLink to="/art">Art</HeaderLink>
             {props.wallet ? (

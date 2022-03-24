@@ -69,7 +69,7 @@ function HeroPage() {
 
 function Projects() {
   return (
-    <VStack spacing={8}>
+    <VStack spacing={8} id="projects">
       <Text textStyle={"h2"}>PROJECTS</Text>
       <VStack spacing={4}>
         <HStack
@@ -170,6 +170,7 @@ function Project(props: { name: string; text: string; href: string }) {
 function AboutMe() {
   return (
     <VStack
+      id="about"
       backgroundImage={RepeatingImage}
       w="100%"
       pt={16}
