@@ -40,6 +40,8 @@ function App() {
             path="/"
             element={
               <Layout
+                wallet={wallet}
+                onWalletDisconnect={(wallet) => setWallet(undefined)}
                 onWalletChange={(wallet) => setWallet(wallet)}
                 lib={CardanoSerializationLib}
               />

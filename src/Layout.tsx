@@ -22,6 +22,8 @@ import { BasicWallet } from "cardano-web-bridge-wrapper";
 import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
 
 export default function Layout(props: {
+  wallet?: BasicWallet;
+  onWalletDisconnect: (wallet: BasicWallet) => void;
   onWalletChange: (wallet: BasicWallet) => void;
   lib: typeof CardanoSerializationLib;
 }) {
@@ -34,6 +36,8 @@ export default function Layout(props: {
         <Box w="full">
           <TopNav
             variant="background"
+            wallet={props.wallet}
+            onWalletDisconnect={props.onWalletDisconnect}
             onWalletChange={props.onWalletChange}
             lib={props.lib}
           />

@@ -1,6 +1,6 @@
 import { Icon, IconProps } from "@chakra-ui/react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
-import { IoMdWallet } from "react-icons/io";
+import { AiFillWallet } from "react-icons/ai";
 import { MdContentCopy } from "react-icons/md";
 import {
   BiLinkExternal,
@@ -10,6 +10,7 @@ import {
   BiLeftArrowAlt,
 } from "react-icons/bi";
 import { BsLink45Deg, BsCheckCircleFill } from "react-icons/bs";
+import { GiUnplugged, GiAchievement } from "react-icons/gi";
 
 // Social Media
 export function Discord(props: IconProps) {
@@ -27,7 +28,15 @@ export function Twitter(props: IconProps) {
 // Wallet
 
 export function Wallet(props: IconProps) {
-  return <Icon {...props} as={IoMdWallet} />;
+  return <Icon {...props} as={AiFillWallet} />;
+}
+
+export function WalletDisconnect(props: IconProps) {
+  return <Icon {...props} as={GiUnplugged} />;
+}
+
+export function Rewards(props: IconProps) {
+  return <Icon {...props} as={GiAchievement} />;
 }
 
 // Util
