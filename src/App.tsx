@@ -37,6 +37,32 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route
+            path="/home"
+            element={
+              <PageErrorBoundary>
+                <Home
+                  wallet={wallet}
+                  onWalletDisconnect={(wallet) => setWallet(undefined)}
+                  onWalletChange={(wallet) => setWallet(wallet)}
+                  lib={CardanoSerializationLib}
+                />
+              </PageErrorBoundary>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <PageErrorBoundary>
+                <Home
+                  wallet={wallet}
+                  onWalletDisconnect={(wallet) => setWallet(undefined)}
+                  onWalletChange={(wallet) => setWallet(wallet)}
+                  lib={CardanoSerializationLib}
+                />
+              </PageErrorBoundary>
+            }
+          />
+          <Route
             path="/"
             element={
               <Layout
@@ -68,22 +94,6 @@ function App() {
               element={
                 <PageErrorBoundary>
                   <Work />
-                </PageErrorBoundary>
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <PageErrorBoundary>
-                  <Home />
-                </PageErrorBoundary>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <PageErrorBoundary>
-                  <Home />
                 </PageErrorBoundary>
               }
             />

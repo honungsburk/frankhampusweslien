@@ -31,7 +31,9 @@ export default function TopNav(props: {
   lib: typeof CardanoSerializationLib;
 }): JSX.Element {
   return (
-    <Center backgroundImage={RepeatingImage}>
+    <Center
+      backgroundImage={props.variant === "background" ? RepeatingImage : ""}
+    >
       <Container maxW="container.xl">
         <Flex py={12} align={"center"}>
           <Logo></Logo>
@@ -72,7 +74,7 @@ function Logo() {
   return (
     <Center>
       <Link as={ReachLink} to="/home">
-        <Text> LOGO</Text>
+        <Text textStyle={"logo-small"}>fhw</Text>
       </Link>
     </Center>
   );

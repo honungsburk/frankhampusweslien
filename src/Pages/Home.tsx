@@ -10,37 +10,54 @@ import {
   ListItem,
   List,
   ListIcon,
+  Box,
 } from "@chakra-ui/react";
+import { BasicWallet } from "cardano-web-bridge-wrapper";
 import { Link as ReachLink } from "react-router-dom";
 import * as Icons from "../Components/Icons";
+import TopNav from "../Components/TopNav";
+import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
+import RepeatingImage from "../assets/img/background/circles.png";
 
-export default function Home() {
+export default function Home(props: {
+  wallet?: BasicWallet;
+  onWalletDisconnect: (wallet: BasicWallet) => void;
+  onWalletChange: (wallet: BasicWallet) => void;
+  lib: typeof CardanoSerializationLib;
+}) {
   const layout: "mobile" | "desktop" | undefined = useBreakpointValue({
     base: "mobile",
     lg: "desktop",
   });
 
   return (
-    <>
-      <Spacer />
+    <Box>
+      <Box backgroundImage={RepeatingImage} pb={16}>
+        <TopNav
+          variant="empty"
+          wallet={props.wallet}
+          onWalletDisconnect={props.onWalletDisconnect}
+          onWalletChange={props.onWalletChange}
+          lib={props.lib}
+        />
+        <HeroPage />
+      </Box>
       <Center mt={6} mx={2}>
         <VStack spacing={8}>
-          <HeroPage />
           <Projects />
           <AboutMe />
         </VStack>
       </Center>
-    </>
+    </Box>
   );
 }
 
 function HeroPage() {
   return (
     <VStack>
-      <Heading fontSize={["3xl", null, "4xl"]} textAlign={"center"}>
-        FRANK HAMPUS WESLIEN
-      </Heading>
-
+      <Text textStyle={"logo-large"} textAlign={"center"}>
+        frank hampus weslien
+      </Text>
       <Heading fontSize={["xl", null, "2xl"]} textAlign={"center"}>
         ANYONE CAN MAKE ART. I DO.
       </Heading>

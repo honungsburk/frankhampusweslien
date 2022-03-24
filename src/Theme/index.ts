@@ -47,6 +47,20 @@ export const Theme = extendTheme({
   shadows,
   initialColorMode: "dark",
   useSystemColorMode: false,
+  textStyles: {
+    "logo-large": {
+      fontFamily: "Monoton",
+      fontSize: ["48px", "72px"],
+      fontWeight: "normal",
+      textTransform: "uppercase",
+    },
+    "logo-small": {
+      fontFamily: "Monoton",
+      fontSize: ["32px"],
+      fontWeight: "normal",
+      textTransform: "uppercase",
+    },
+  },
 });
 
 export default Theme;

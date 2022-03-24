@@ -1,18 +1,15 @@
 import {
-  Center,
   HStack,
   Link,
   Flex,
   Box,
   Spacer,
-  Text,
   Icon,
   useBreakpointValue,
   Alert,
   VStack,
   AlertIcon,
   useColorModeValue,
-  Container,
 } from "@chakra-ui/react";
 import { Link as ReachLink, Outlet } from "react-router-dom";
 import * as Icons from "./Components/Icons";
