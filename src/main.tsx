@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ColorModeScript } from "@chakra-ui/react";
 import Theme from "./Theme";
 import "@fontsource/monoton";
+import "@fontsource/roboto";
 
 ReactDOM.render(
   <>

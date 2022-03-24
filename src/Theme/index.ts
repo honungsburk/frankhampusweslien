@@ -47,6 +47,19 @@ export const Theme = extendTheme({
   shadows,
   initialColorMode: "dark",
   useSystemColorMode: false,
+  layerStyles: {
+    "border-lg": {
+      border: "4px solid",
+      borderColor: "black",
+    },
+    "border-md": {
+      border: "2px solid",
+      borderColor: "black",
+    },
+    shadow: {
+      boxShadow: "4px 4px 0px #000000",
+    },
+  },
   textStyles: {
     "logo-large": {
       fontFamily: "Monoton",
