@@ -54,12 +54,15 @@ export default function Home(props: {
 function HeroPage() {
   return (
     <VStack>
-      <Text textStyle={"logo-large"} textAlign={"center"}>
-        frank hampus weslien
-      </Text>
-      <Text textStyle={"h3"} textAlign={"center"}>
-        ANYONE CAN MAKE ART. I DO.
-      </Text>
+      <VStack spacing="0">
+        <Text textStyle={"logo-large"} textAlign={"center"}>
+          frank hampus weslien
+        </Text>
+        <Text textStyle={"h3"} textAlign={"center"}>
+          ANYONE CAN MAKE ART. I DO.
+        </Text>
+      </VStack>
+      <LinkButton href="/art">Explore my art</LinkButton>
     </VStack>
   );
 }
@@ -112,7 +115,7 @@ function Projects() {
           />
         </HStack>
       </VStack>
-      <LinkButton href="https://github.com/honungsburk">
+      <LinkButton href="https://github.com/honungsburk" isExternal>
         View my github
       </LinkButton>
     </VStack>
