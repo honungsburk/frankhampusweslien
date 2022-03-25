@@ -7,7 +7,7 @@ import {
   FiInstagram,
   FiGithub,
 } from "react-icons/fi";
-import { AiFillWallet } from "react-icons/ai";
+import { AiFillWallet, AiOutlineDownload } from "react-icons/ai";
 import { MdContentCopy } from "react-icons/md";
 import {
   BiLinkExternal,
@@ -59,6 +59,10 @@ export function Rewards(props: IconProps) {
 }
 
 // Util
+
+export function Download(props: IconProps) {
+  return <Icon {...props} as={AiOutlineDownload} />;
+}
 
 export function ContentCopy(props: IconProps) {
   return <Icon {...props} as={MdContentCopy} />;
