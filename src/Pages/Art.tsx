@@ -42,8 +42,8 @@ function StatusBar(): JSX.Element {
     <HStack>
       <Status bg="accent.600">total: 816</Status>
       <Status bg="success.200">available: 69</Status>
-      <Status bg="secondary.100">reserved: 0</Status>
-      <Status bg="primary.100">Sold: 700</Status>
+      <Status bg="primary.500">reserved: 0</Status>
+      <Status bg="secondary.500">Sold: 700</Status>
       <Status bg="accent.600">not for sale: 14</Status>
     </HStack>
   );
