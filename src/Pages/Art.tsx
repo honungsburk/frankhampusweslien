@@ -24,7 +24,7 @@ export default function Art(): JSX.Element {
         </VStack>
         <ArtCard
           src={refImage}
-          to="/12312"
+          to="/art/12312"
           name="Tiny Tsunami"
           tags={["Procreate", "Banana", "Japan"]}
         />

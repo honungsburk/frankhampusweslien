@@ -13,6 +13,7 @@ const Home = lazy(() => import("./Pages/Home"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const Work = lazy(() => import("./Pages/Work"));
 const Art = lazy(() => import("./Pages/Art"));
+const Artwork = lazy(() => import("./Pages/Artwork"));
 const FAQ = lazy(() => import("./Pages/FAQ"));
 
 declare global {
@@ -78,6 +79,14 @@ function App() {
               element={
                 <PageErrorBoundary>
                   <FAQ />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/art/:id"
+              element={
+                <PageErrorBoundary>
+                  <Artwork />
                 </PageErrorBoundary>
               }
             />

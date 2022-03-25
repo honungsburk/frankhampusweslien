@@ -22,7 +22,6 @@ import RepeatingImage from "../assets/img/background/circles.png";
 import { BasicWallet } from "cardano-web-bridge-wrapper";
 import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
 import WalletSelector from "./WalletSelector";
-import { scrollToFragment } from "scroll-to-fragment";
 
 export default function TopNav(props: {
   variant: "background" | "empty";
