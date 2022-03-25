@@ -6,14 +6,28 @@ import {
   BoxProps,
   Text,
   VStack,
+  Image,
+  Box,
+  Link,
 } from "@chakra-ui/react";
+import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
+import { shadows } from "../Theme";
+import { Link as ReachLink } from "react-router-dom";
 
 export default function Art(): JSX.Element {
   return (
     <Container mt={8}>
-      <VStack maxW="md">
-        <SearchBar />
-        <StatusBar />
+      <VStack>
+        <VStack maxW="md">
+          <SearchBar />
+          <StatusBar />
+        </VStack>
+        <ArtCard
+          src={refImage}
+          to="/12312"
+          name="Tiny Tsunami"
+          tags={["Procreate", "Banana", "Japan"]}
+        />
       </VStack>
     </Container>
   );
@@ -43,5 +57,33 @@ function Status(props: BoxProps): JSX.Element {
         {children}
       </Text>
     </Center>
+  );
+}
+
+function ArtCard(props: {
+  src: string;
+  to: string;
+  name: string;
+  tags: string[];
+}): JSX.Element {
+  return (
+    <Link as={ReachLink} to={props.to} _hover={{}}>
+      <VStack
+        layerStyle={"border-lg"}
+        _hover={{ shadow: shadows.md, cursor: "pointer" }}
+      >
+        <Image src={props.src} borderBottom="4px" />
+        <VStack alignItems={"start"} width="100%" px="2" py="2">
+          <Text textStyle={"body-bold"}>{props.name}</Text>
+          <HStack>
+            {props.tags.map((s, index) => (
+              <Text textStyle="small" textTransform={"uppercase"} key={index}>
+                {s}
+              </Text>
+            ))}
+          </HStack>
+        </VStack>
+      </VStack>
+    </Link>
   );
 }

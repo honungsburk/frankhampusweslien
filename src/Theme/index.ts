@@ -31,8 +31,12 @@ const global = (props: Dict<any>) => ({
   // },
 });
 
-const shadows = {
+const privateShadows = {
   outline: "0 0 0 2px " + colors.black,
+};
+
+export const shadows = {
+  md: "4px 4px 0px #000000",
 };
 
 export const Theme = extendTheme({
@@ -44,7 +48,7 @@ export const Theme = extendTheme({
     Button: button,
   },
   colors: colors,
-  shadows,
+  privateShadows,
   initialColorMode: "dark",
   useSystemColorMode: false,
   layerStyles: {
