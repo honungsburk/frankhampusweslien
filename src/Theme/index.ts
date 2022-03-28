@@ -4,6 +4,7 @@ import colors from "./colors";
 import { Dict } from "@chakra-ui/utils";
 import input from "./components/input";
 import button from "./components/button";
+import tabs from "./components/tabs";
 
 const global = (props: Dict<any>) => ({
   body: {
@@ -46,6 +47,7 @@ export const Theme = extendTheme({
   components: {
     Input: input,
     Button: button,
+    Tabs: tabs,
   },
   colors: colors,
   privateShadows,
@@ -131,6 +133,12 @@ export const Theme = extendTheme({
       fontSize: ["10px"],
       fontWeight: "bold",
       letterSpacing: "3%",
+    },
+    "body-link": {
+      fontFamily: "Roboto",
+      fontSize: ["16px"],
+      fontWeight: "normal",
+      lineHeight: "140%",
     },
   },
 });
