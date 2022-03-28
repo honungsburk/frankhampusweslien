@@ -16,9 +16,13 @@ import {
 import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
 import * as Icons from "../Components/Icons";
 import ReactMarkdown from "react-markdown";
+import * as ArtworkT from "../Types/Artwork";
+import { mimeFromSrc } from "../Types/Mime";
+import { prettyResolution } from "../Types/Resolution";
+import { ReactElement } from "react";
 
 export default function Artwork(): JSX.Element {
-  const artworkData = {
+  const artworkData: ArtworkT.Artwork = {
     name: "Milk Man",
     thumbNail: refImage,
     lowResSrc: refImage,
@@ -27,20 +31,22 @@ export default function Artwork(): JSX.Element {
       x: 3000,
       y: 4000,
     },
-    id: "1",
-    description: `
-**AlgoMarble** is a series of 512 unique generative artworks. Each artwork can be bought as a one-of-a-kind NFT.&nbsp;  
-&nbsp;  
-The basic idea was to stack layers of noise on top of each other until fantastical textures emerged. 
-This is not a completely new idea but can trace its orgin back as far as 1983 with the invention of Perlin noise by Ken Perlin. 
-If you want to check out the code you can head over to the [git repo](https://gitlab.com/HampusWeslien/algomarble). 
-Where you will also find further explanations and instructions for generating super high resolution images. 
-The algorithm uses the name of the artwork as the seed, in this case the seed is '511'.&nbsp;  
-&nbsp;  
-There is also a [youtube video](https://www.youtube.com/watch?v=q1AVe5wOdR4&feature=youtu.be) that explain the basic idea behind the algorithm.&nbsp;  
-&nbsp;  
-Some of the images are not made justice when they are made to small. 
-If the image looks pixelated I recommend downloading the high resolution image; you find the download link beneath the image.`,
+    collection: "Frank's Fine Figures",
+    policyID: "dd04ad427b8c2f76409502907063239518d81ad7415046e170d3da07",
+    assetName: "FHWARTMilkMan",
+    createdAt: 0,
+    onChainMetadata: {
+      name: "FHWARTMilkMan",
+      image: "ipfs://QmcniBosAY875k2CT6VRHaJUK17hR7VrAsWLwnPh1XmLNp",
+      mediaType: "image/jpeg",
+      files: [
+        {
+          src: "ipfs://QmbwK5of4pF6nPiEp2784XyQcgySaY2EQKrY5o2zFz8fsj",
+          name: "FHWARTHighResolution",
+          mediaType: "image/jpeg",
+        },
+      ],
+    },
   };
 
   return (
@@ -108,56 +114,23 @@ function DownloadButton(props: { src: string }): JSX.Element {
 // Info Area
 ////////////////////////////////////////////////////////////////////////////////
 
-type ArtWorkData = {
-  name: string;
-  thumbNail: string;
-  lowResSrc: string;
-  highResSrc: string;
-  resolution: Resolution;
-  id: string;
-  description: string;
-};
+function generateImageTags(artworkData: ArtworkT.Artwork): string[] {
+  const result = [];
 
-type Resolution = {
-  x: number;
-  y: number;
-};
+  if (artworkData.resolution) {
+    const res = prettyResolution(artworkData.resolution);
+    result.push(res);
+  }
 
-function generateImageTags(artworkData: ArtWorkData): string[] {
-  const mime = mimeType(artworkData.highResSrc);
-  const res = prettyResolution(artworkData.resolution);
+  const mime = mimeFromSrc(artworkData.highResSrc);
   if (mime) {
-    return [mime, res];
-  } else {
-    return [res];
+    result.push(mime);
   }
+
+  return result;
 }
 
-function prettyResolution(resolution: Resolution): string {
-  return resolution.x + "px by " + resolution.y + "px";
-}
-
-function mimeType(src: string): string | undefined {
-  const re = /(?:\.([^.]+))?$/;
-
-  const extR: RegExpExecArray | null = re.exec(src);
-  const ext: string | undefined = extR ? extR[1] : undefined;
-
-  switch (ext?.toLowerCase()) {
-    case "jpg":
-      return "image/jpg";
-    case "jpeg":
-      return "image/jpeg";
-    case "svg":
-      return "image/svg+xml";
-    case "png":
-      return "image/png";
-    default:
-      return undefined;
-  }
-}
-
-function InfoArea(props: { artworkData: ArtWorkData }): JSX.Element {
+function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
   return (
     <VStack alignItems={"start"}>
       <Text textStyle={"h2"}>{props.artworkData.name}</Text>;
@@ -168,7 +141,7 @@ function InfoArea(props: { artworkData: ArtWorkData }): JSX.Element {
         </TabList>
         <TabPanels>
           <TabPanel width={"600px"}>
-            <Markup>{props.artworkData.description}</Markup>
+            <Markup>{ArtworkT.description(props.artworkData)}</Markup>
           </TabPanel>
           <TabPanel width={"600px"}>
             <MetadataTab artworkData={props.artworkData} />
@@ -201,6 +174,89 @@ function Markup(props: { children: string }) {
   );
 }
 
-function MetadataTab(props: { artworkData: ArtWorkData }): JSX.Element {
-  return <Text>IN PROGRESS!</Text>;
+function MetadataTab(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
+  return (
+    <VStack alignItems={"start"} spacing={4}>
+      <MetadataSection name={"General"}>
+        {props.artworkData.resolution ? (
+          <>
+            <MetadataEntry
+              name={"width"}
+              value={props.artworkData.resolution.x.toString() + " px"}
+            />
+            <MetadataEntry
+              name={"height"}
+              value={props.artworkData.resolution.y.toString() + " px"}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+        <MetadataEntry
+          name={"created"}
+          value={props.artworkData.createdAt.toString()}
+        />
+      </MetadataSection>
+      <MetadataSection name={"Token"}>
+        <MetadataEntry name={"assetName"} value={props.artworkData.assetName} />
+        <MetadataEntry name={"policyID"} value={props.artworkData.policyID} />
+        <MetadataEntry name={"assetID"} value={"TODO"} />
+      </MetadataSection>
+      <MetadataSection name={"Files"}>
+        <>
+          <FileSection
+            name={props.artworkData.onChainMetadata.name}
+            image={props.artworkData.onChainMetadata.image}
+            mediaType={props.artworkData.onChainMetadata.mediaType}
+          />
+          {props.artworkData.onChainMetadata.files.map((file) => (
+            <FileSection
+              key={file.src}
+              name={file.name}
+              image={file.src}
+              mediaType={file.mediaType}
+            />
+          ))}
+        </>
+      </MetadataSection>
+    </VStack>
+  );
+}
+
+function FileSection(props: {
+  name: string;
+  image: string;
+  mediaType: string;
+}): JSX.Element {
+  return (
+    <MetadataSection name={props.name}>
+      <MetadataEntry name={"image"} value={props.image} />
+      <MetadataEntry name={"media type"} value={props.mediaType} />
+    </MetadataSection>
+  );
+}
+
+function MetadataSection(props: {
+  name: string;
+  children: (JSX.Element | string) | JSX.Element[];
+}): JSX.Element {
+  return (
+    <VStack alignItems={"start"}>
+      <Text textStyle={"body-bold"}>{props.name}</Text>
+      <VStack pl={4} alignItems={"start"}>
+        {props.children}
+      </VStack>
+    </VStack>
+  );
+}
+
+function MetadataEntry(props: { name: string; value: string }): JSX.Element {
+  return (
+    <HStack spacing={8}>
+      <Text textStyle={"body"} width={"100px"}>
+        {props.name}
+      </Text>{" "}
+      <Text textStyle={"body"}>{props.value}</Text>
+    </HStack>
+  );
 }
