@@ -171,7 +171,7 @@ function InfoArea(props: { artworkData: ArtWorkData }): JSX.Element {
             <Markup>{props.artworkData.description}</Markup>
           </TabPanel>
           <TabPanel width={"600px"}>
-            <p>two!</p>
+            <MetadataTab artworkData={props.artworkData} />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -201,6 +201,6 @@ function Markup(props: { children: string }) {
   );
 }
 
-function MetadataTab(): JSX.Element {
+function MetadataTab(props: { artworkData: ArtWorkData }): JSX.Element {
   return <Text>IN PROGRESS!</Text>;
 }
