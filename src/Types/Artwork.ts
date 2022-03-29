@@ -3,15 +3,16 @@ import { Resolution } from "./Resolution";
 export type Artwork = {
   name: string;
   collection: string;
+  description?: string;
   saleInfo?: SaleInfo;
-  thumbNail: string;
-  lowResSrc: string;
-  highResSrc: string;
+  src: string;
   resolution?: Resolution;
-  policyID: string;
-  assetName: string;
-  createdAt: number;
-  onChainMetadata: ChainMetadata;
+  createdAt: Date;
+  token?: {
+    policyID: string;
+    assetName: string;
+    onChainMetadata: ChainMetadata;
+  };
 };
 
 export type SaleInfo = {
@@ -25,6 +26,14 @@ export type ChainMetadata = {
   mediaType: string;
   files: { src: string; name: string; mediaType: string }[];
 };
+
+export function lowResSrc(artwork: Artwork): string {
+  return "";
+}
+
+export function thumbNailSrc(artwork: Artwork): string {
+  return "";
+}
 
 export function description(art: Artwork): string {
   return `**AlgoMarble** is a series of 512 unique generative artworks. Each artwork can be bought as a one-of-a-kind NFT.&nbsp;  
