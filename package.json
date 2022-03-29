@@ -2,7 +2,6 @@
   "name": "frank-hampus-weslien",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
     "pretty": "prettier --write \"./src/**/*.{ts,tsx,json}\"",
     "lint": "eslint --ext .js,.ts ./src",
