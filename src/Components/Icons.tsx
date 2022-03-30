@@ -15,9 +15,11 @@ import {
   BiCaretDown,
   BiRightArrowAlt,
   BiLeftArrowAlt,
+  BiErrorAlt,
 } from "react-icons/bi";
 import { BsLink45Deg, BsCheckCircleFill } from "react-icons/bs";
 import { GiUnplugged, GiAchievement } from "react-icons/gi";
+import { ImImage } from "react-icons/im";
 
 // Social Media
 export function Discord(props: IconProps) {
@@ -59,6 +61,14 @@ export function Rewards(props: IconProps) {
 }
 
 // Util
+
+export function Image(props: IconProps) {
+  return <Icon {...props} as={ImImage} />;
+}
+
+export function Error(props: IconProps) {
+  return <Icon {...props} as={BiErrorAlt} />;
+}
 
 export function Download(props: IconProps) {
   return <Icon {...props} as={AiOutlineDownload} />;

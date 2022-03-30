@@ -1,9 +1,10 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import * as firebase from "firebase/app";
+import * as Firestore from "firebase/firestore";
 import { firebaseConfig } from "./secret.firebase";
+import * as Storage from "firebase/storage";
 
-const app = firebase.initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-console.log(app.name ? "Firebase Mode Activated!" : "Firebase not working :(");
+export const app = firebase.initializeApp(firebaseConfig);
+export const db = Firestore.getFirestore(app);
+Firestore.connectFirestoreEmulator(db, "localhost", 8080);
+export const storage = Storage.getStorage(app);
+Storage.connectStorageEmulator(storage, "localhost", 9199);

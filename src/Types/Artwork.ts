@@ -27,12 +27,18 @@ export type ChainMetadata = {
   files: { src: string; name: string; mediaType: string }[];
 };
 
-export function lowResSrc(artwork: Artwork): string {
-  return "";
+export function lowResSrc(src: string): string {
+  const [path, ext] = src.split(".");
+  if (ext !== "svg") {
+    return path + "_low_res.jpg";
+  } else {
+    return src;
+  }
 }
 
-export function thumbNailSrc(artwork: Artwork): string {
-  return "";
+export function thumbNailSrc(src: string): string {
+  const [path, ext] = src.split(".");
+  return path + "_thumb_nail.jpg";
 }
 
 export function description(art: Artwork): string {

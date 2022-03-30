@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
 import * as Icons from "../Components/Icons";
@@ -20,61 +21,72 @@ import * as ArtworkT from "../Types/Artwork";
 import { mimeFromSrc } from "../Types/Mime";
 import { prettyResolution } from "../Types/Resolution";
 import { ReactElement } from "react";
+import { useParams } from "react-router-dom";
+import { doc } from "firebase/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
+import * as firebase from "../firebase";
+import { ref, StorageReference } from "firebase/storage";
+import { useDownloadURL } from "react-firebase-hooks/storage";
+import FirestoreImage from "../Components/FirestoreImage";
 
 export default function Artwork(): JSX.Element {
-  const artworkData: ArtworkT.Artwork = {
-    name: "Milk Man",
-    thumbNail: refImage,
-    lowResSrc: refImage,
-    highResSrc: refImage,
-    resolution: {
-      x: 3000,
-      y: 4000,
-    },
-    collection: "Frank's Fine Figures",
-    policyID: "dd04ad427b8c2f76409502907063239518d81ad7415046e170d3da07",
-    assetName: "FHWARTMilkMan",
-    createdAt: 0,
-    onChainMetadata: {
-      name: "FHWARTMilkMan",
-      image: "ipfs://QmcniBosAY875k2CT6VRHaJUK17hR7VrAsWLwnPh1XmLNp",
-      mediaType: "image/jpeg",
-      files: [
-        {
-          src: "ipfs://QmbwK5of4pF6nPiEp2784XyQcgySaY2EQKrY5o2zFz8fsj",
-          name: "FHWARTHighResolution",
-          mediaType: "image/jpeg",
-        },
-      ],
-    },
-  };
-
-  return (
-    <Center mt={16}>
-      <HStack spacing={8} alignItems={"start"}>
-        <ImageArea
-          src={artworkData.lowResSrc}
-          tags={generateImageTags(artworkData)}
-          downloadSrc={artworkData.highResSrc}
-        />
-        <InfoArea artworkData={artworkData} />
-      </HStack>
-    </Center>
+  const { id } = useParams();
+  const [snapshot, loading, error] = useDocument(
+    doc(firebase.db, "art", id ? id : "missing")
   );
+
+  let content = <></>;
+
+  if (error) {
+    content = (
+      <VStack>
+        <Text textStyle={"h2"}>Error</Text>
+        <Text textStyle={"body"}>error.message</Text>
+      </VStack>
+    );
+  } else if (loading) {
+    content = (
+      <VStack>
+        <Spinner color="black" size="xl" thickness="8px" />
+        <Text textStyle={"body-bold"}>LOADING ART</Text>
+      </VStack>
+    );
+  } else if (snapshot) {
+    const artworkData = snapshot.data() as ArtworkT.Artwork | undefined;
+    if (artworkData) {
+      content = (
+        <HStack spacing={12} alignItems={"start"} maxW={"80%"} maxH={"80%"}>
+          <ImageArea
+            src={artworkData.src}
+            tags={generateImageTags(artworkData)}
+          />
+          <InfoArea artworkData={artworkData} />
+        </HStack>
+      );
+    } else {
+      content = (
+        <VStack>
+          <Text textStyle={"h2"}>Error</Text>
+          <Text textStyle={"body"}>Couldn't find any data for object {id}</Text>
+        </VStack>
+      );
+    }
+  }
+
+  return <Center mt={16}>{content}</Center>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Image Area
 ////////////////////////////////////////////////////////////////////////////////
 
-function ImageArea(props: {
-  src: string;
-  tags: string[];
-  downloadSrc: string;
-}): JSX.Element {
+function ImageArea(props: { src: string; tags: string[] }): JSX.Element {
   return (
     <VStack width="fit-content" spacing={0}>
-      <Image src={props.src} layerStyle="border-lg" />
+      <FirestoreImage
+        storageRef={ref(firebase.storage, ArtworkT.lowResSrc(props.src))}
+        layerStyle="border-lg"
+      />
       <Flex width="100%">
         <Center>
           <HStack>
@@ -85,7 +97,7 @@ function ImageArea(props: {
         </Center>
         <Spacer />
         <Center>
-          <DownloadButton src={props.downloadSrc} />
+          <DownloadButton storageRef={ref(firebase.storage, props.src)} />
         </Center>
       </Flex>
     </VStack>
@@ -102,9 +114,11 @@ function ImageTag(props: { children: string }): JSX.Element {
   );
 }
 
-function DownloadButton(props: { src: string }): JSX.Element {
+function DownloadButton(props: { storageRef: StorageReference }): JSX.Element {
+  const [value, loading, error] = useDownloadURL(props.storageRef);
+
   return (
-    <Link href={props.src} download aria-label="Download full resolution image">
+    <Link href={value} download aria-label="Download full resolution image">
       <Icons.Download boxSize={"8"} />
     </Link>
   );
@@ -122,7 +136,7 @@ function generateImageTags(artworkData: ArtworkT.Artwork): string[] {
     result.push(res);
   }
 
-  const mime = mimeFromSrc(artworkData.highResSrc);
+  const mime = mimeFromSrc(artworkData.src);
   if (mime) {
     result.push(mime);
   }
@@ -197,28 +211,40 @@ function MetadataTab(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
           value={props.artworkData.createdAt.toString()}
         />
       </MetadataSection>
-      <MetadataSection name={"Token"}>
-        <MetadataEntry name={"assetName"} value={props.artworkData.assetName} />
-        <MetadataEntry name={"policyID"} value={props.artworkData.policyID} />
-        <MetadataEntry name={"assetID"} value={"TODO"} />
-      </MetadataSection>
-      <MetadataSection name={"Files"}>
+      {props.artworkData.token ? (
         <>
-          <FileSection
-            name={props.artworkData.onChainMetadata.name}
-            image={props.artworkData.onChainMetadata.image}
-            mediaType={props.artworkData.onChainMetadata.mediaType}
-          />
-          {props.artworkData.onChainMetadata.files.map((file) => (
-            <FileSection
-              key={file.src}
-              name={file.name}
-              image={file.src}
-              mediaType={file.mediaType}
+          <MetadataSection name={"Token"}>
+            <MetadataEntry
+              name={"assetName"}
+              value={props.artworkData.token.assetName}
             />
-          ))}
+            <MetadataEntry
+              name={"policyID"}
+              value={props.artworkData.token.policyID}
+            />
+            <MetadataEntry name={"assetID"} value={"TODO"} />
+          </MetadataSection>
+          <MetadataSection name={"Files"}>
+            <>
+              <FileSection
+                name={props.artworkData.token.onChainMetadata.name}
+                image={props.artworkData.token.onChainMetadata.image}
+                mediaType={props.artworkData.token.onChainMetadata.mediaType}
+              />
+              {props.artworkData.token.onChainMetadata.files.map((file) => (
+                <FileSection
+                  key={file.src}
+                  name={file.name}
+                  image={file.src}
+                  mediaType={file.mediaType}
+                />
+              ))}
+            </>
+          </MetadataSection>
         </>
-      </MetadataSection>
+      ) : (
+        <></>
+      )}
     </VStack>
   );
 }

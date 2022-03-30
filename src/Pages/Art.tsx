@@ -4,17 +4,65 @@ import {
   Container,
   HStack,
   BoxProps,
+  Box,
   Text,
   VStack,
   Image,
-  Box,
+  Spinner,
   Link,
+  SimpleGrid,
+  ImageProps,
 } from "@chakra-ui/react";
-import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection } from "firebase/firestore";
 import { shadows } from "../Theme";
 import { Link as ReachLink } from "react-router-dom";
+import * as firebase from "../firebase";
+import React from "react";
+import { ref, StorageReference } from "firebase/storage";
+import * as Artwork from "../Types/Artwork";
+import FirestoreImage from "../Components/FirestoreImage";
 
 export default function Art(): JSX.Element {
+  const [value, loading, error] = useCollection(collection(firebase.db, "art"));
+
+  let content = <></>;
+
+  if (error) {
+    content = (
+      <VStack>
+        <Text textStyle={"h2"}>Error</Text>
+        <Text textStyle={"body"}>{JSON.stringify(error)}</Text>
+      </VStack>
+    );
+  } else if (loading) {
+    content = (
+      <VStack>
+        <Spinner color="black" size="xl" thickness="8px" />
+        <Text fontSize={12} fontWeight={"bold"}>
+          LOADING...
+        </Text>
+      </VStack>
+    );
+  } else if (value) {
+    content = (
+      <SimpleGrid columns={4} spacing={4}>
+        {value.docs.map((doc) => {
+          const data = doc.data();
+          return (
+            <ArtCard
+              to={"./" + doc.id}
+              name={data.name}
+              src={Artwork.thumbNailSrc(data.src)}
+              key={doc.id}
+              tags={[]}
+            />
+          );
+        })}
+      </SimpleGrid>
+    );
+  }
+
   return (
     <Container mt={8}>
       <VStack>
@@ -22,12 +70,7 @@ export default function Art(): JSX.Element {
           <SearchBar />
           <StatusBar />
         </VStack>
-        <ArtCard
-          src={refImage}
-          to="/art/12312"
-          name="Tiny Tsunami"
-          tags={["Procreate", "Banana", "Japan"]}
-        />
+        {content}
       </VStack>
     </Container>
   );
@@ -72,7 +115,12 @@ function ArtCard(props: {
         layerStyle={"border-lg"}
         _hover={{ shadow: shadows.md, cursor: "pointer" }}
       >
-        <Image src={props.src} borderBottom="4px" />
+        <FirestoreImage
+          storageRef={ref(firebase.storage, props.src)}
+          borderBottom={"4px"}
+          width="100%"
+          height={"100%"}
+        />
         <VStack alignItems={"start"} width="100%" px="2" py="2">
           <Text textStyle={"body-bold"}>{props.name}</Text>
           <HStack>
