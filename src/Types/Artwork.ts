@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { Resolution } from "./Resolution";
 
 export type Artwork = {
@@ -7,12 +8,14 @@ export type Artwork = {
   saleInfo?: SaleInfo;
   src: string;
   resolution?: Resolution;
-  createdAt: Date;
-  token?: {
-    policyID: string;
-    assetName: string;
-    onChainMetadata: ChainMetadata;
-  };
+  createdAt: Timestamp;
+  token?: Token;
+};
+
+export type Token = {
+  policyID: string;
+  assetName: string;
+  onChainMetadata: ChainMetadata;
 };
 
 export type SaleInfo = {

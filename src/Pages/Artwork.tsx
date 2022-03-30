@@ -13,6 +13,7 @@ import {
   TabPanels,
   TabPanel,
   Spinner,
+  Tooltip,
 } from "@chakra-ui/react";
 import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
 import * as Icons from "../Components/Icons";
@@ -28,6 +29,7 @@ import * as firebase from "../firebase";
 import { ref, StorageReference } from "firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import FirestoreImage from "../Components/FirestoreImage";
+import * as CardanoUtil from "../Cardano/Util";
 
 export default function Artwork(): JSX.Element {
   const { id } = useParams();
@@ -114,14 +116,33 @@ function ImageTag(props: { children: string }): JSX.Element {
   );
 }
 
+function ErrorIcon(props: { error: string }): JSX.Element {
+  return (
+    <Tooltip label={props.error}>
+      <Icons.Error />
+    </Tooltip>
+  );
+}
+
 function DownloadButton(props: { storageRef: StorageReference }): JSX.Element {
   const [value, loading, error] = useDownloadURL(props.storageRef);
 
-  return (
-    <Link href={value} download aria-label="Download full resolution image">
-      <Icons.Download boxSize={"8"} />
-    </Link>
-  );
+  if (error) {
+    return <ErrorIcon error={error.message} />;
+  } else if (loading) {
+    return <Spinner size={"sm"} color="black" thickness="2px"></Spinner>;
+  } else {
+    return (
+      <Link
+        href={value}
+        download
+        isExternal
+        aria-label="Download full resolution image"
+      >
+        <Icons.Download boxSize={"8"} />
+      </Link>
+    );
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -208,44 +229,69 @@ function MetadataTab(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
         )}
         <MetadataEntry
           name={"created"}
-          value={props.artworkData.createdAt.toString()}
+          value={props.artworkData.createdAt
+            .toDate()
+            .toLocaleDateString("sv-SV", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            })}
         />
       </MetadataSection>
       {props.artworkData.token ? (
-        <>
-          <MetadataSection name={"Token"}>
-            <MetadataEntry
-              name={"assetName"}
-              value={props.artworkData.token.assetName}
-            />
-            <MetadataEntry
-              name={"policyID"}
-              value={props.artworkData.token.policyID}
-            />
-            <MetadataEntry name={"assetID"} value={"TODO"} />
-          </MetadataSection>
-          <MetadataSection name={"Files"}>
-            <>
-              <FileSection
-                name={props.artworkData.token.onChainMetadata.name}
-                image={props.artworkData.token.onChainMetadata.image}
-                mediaType={props.artworkData.token.onChainMetadata.mediaType}
-              />
-              {props.artworkData.token.onChainMetadata.files.map((file) => (
-                <FileSection
-                  key={file.src}
-                  name={file.name}
-                  image={file.src}
-                  mediaType={file.mediaType}
-                />
-              ))}
-            </>
-          </MetadataSection>
-        </>
+        <TokenMetadataSection token={props.artworkData.token} />
       ) : (
         <></>
       )}
     </VStack>
+  );
+}
+
+function TokenMetadataSection(props: { token: ArtworkT.Token }): JSX.Element {
+  const policyID = props.token.policyID;
+  const assetName = props.token.assetName;
+  const fingerPrint = CardanoUtil.assetFingerprint(
+    policyID,
+    assetName
+  ).fingerprint();
+
+  return (
+    <>
+      <MetadataSection name={"Token"}>
+        <MetadataEntry
+          name={"policyID"}
+          href={`https://cardanoscan.io/tokenPolicy/${policyID}`}
+          value={policyID}
+        />
+        <MetadataEntry
+          name={"assetName"}
+          href={`https://cardanoscan.io/token/${policyID}.${assetName}`}
+          value={assetName}
+        />
+        <MetadataEntry
+          name={"assetID"}
+          href={`https://cardanoscan.io/token/${fingerPrint}`}
+          value={fingerPrint}
+        />
+      </MetadataSection>
+      <MetadataSection name={"Files"}>
+        <>
+          <FileSection
+            name={props.token.onChainMetadata.name}
+            image={props.token.onChainMetadata.image}
+            mediaType={props.token.onChainMetadata.mediaType}
+          />
+          {props.token.onChainMetadata.files.map((file) => (
+            <FileSection
+              key={file.src}
+              name={file.name}
+              image={file.src}
+              mediaType={file.mediaType}
+            />
+          ))}
+        </>
+      </MetadataSection>
+    </>
   );
 }
 
@@ -276,13 +322,26 @@ function MetadataSection(props: {
   );
 }
 
-function MetadataEntry(props: { name: string; value: string }): JSX.Element {
+function MetadataEntry(props: {
+  name: string;
+  value: string;
+  href?: string;
+}): JSX.Element {
   return (
     <HStack spacing={8}>
       <Text textStyle={"body"} width={"100px"}>
         {props.name}
       </Text>{" "}
-      <Text textStyle={"body"}>{props.value}</Text>
+      {props.href ? (
+        <HStack color={"tertiary.500"}>
+          <Link textStyle={"link"} href={props.href} isExternal>
+            {props.value}
+          </Link>
+          <Icons.External />
+        </HStack>
+      ) : (
+        <Text textStyle={"body"}>{props.value}</Text>
+      )}
     </HStack>
   );
 }

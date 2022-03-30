@@ -78,7 +78,7 @@ export function ContentCopy(props: IconProps) {
   return <Icon {...props} as={MdContentCopy} />;
 }
 
-export function ExternalIcon(props: IconProps) {
+export function External(props: IconProps) {
   return <Icon {...props} as={BiLinkExternal} />;
 }
 
