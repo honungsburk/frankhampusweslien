@@ -15,7 +15,6 @@ import {
   Spinner,
   Tooltip,
 } from "@chakra-ui/react";
-import refImage from "../assets/tmp/Tiny_Tsunami_Thumb_Nail.jpg";
 import * as Icons from "../Components/Icons";
 import ReactMarkdown from "react-markdown";
 import * as ArtworkT from "../Types/Artwork";
@@ -30,6 +29,8 @@ import { ref, StorageReference } from "firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import FirestoreImage from "../Components/FirestoreImage";
 import * as CardanoUtil from "../Cardano/Util";
+import DisplayUnit from "../Components/DisplayUnit";
+import { BigNum } from "@emurgo/cardano-serialization-lib-browser";
 
 export default function Artwork(): JSX.Element {
   const { id } = useParams();
@@ -168,7 +169,18 @@ function generateImageTags(artworkData: ArtworkT.Artwork): string[] {
 function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
   return (
     <VStack alignItems={"start"}>
-      <Text textStyle={"h2"}>{props.artworkData.name}</Text>;
+      <VStack alignItems={"start"} spacing={-2} width={"100%"}>
+        <Flex width={"100%"} alignItems="center">
+          <Text textStyle={"h2"}>{props.artworkData.name}</Text>
+          <Spacer />
+          {props.artworkData.saleInfo ? (
+            <SaleInfo saleInfo={props.artworkData.saleInfo} />
+          ) : (
+            <></>
+          )}
+        </Flex>
+        <Text textStyle={"body"}>{props.artworkData.collection}</Text>
+      </VStack>
       <Tabs variant="brutalist" colorScheme={"tertiary"}>
         <TabList>
           <Tab>ABOUT</Tab>
@@ -176,7 +188,11 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
         </TabList>
         <TabPanels>
           <TabPanel width={"600px"}>
-            <Markup>{ArtworkT.description(props.artworkData)}</Markup>
+            <Markup>
+              {props.artworkData.description
+                ? props.artworkData.description
+                : ArtworkT.collectionDescription(props.artworkData)}
+            </Markup>
           </TabPanel>
           <TabPanel width={"600px"}>
             <MetadataTab artworkData={props.artworkData} />
@@ -184,6 +200,25 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
         </TabPanels>
       </Tabs>
     </VStack>
+  );
+}
+
+function SaleInfo(props: { saleInfo: ArtworkT.SaleInfo }): JSX.Element {
+  return (
+    <Tooltip label={props.saleInfo.status}>
+      <Center
+        px={4}
+        py={2}
+        bg={ArtworkT.saleStatusColor(props.saleInfo.status)}
+      >
+        <DisplayUnit
+          quantity={BigNum.from_str(props.saleInfo.price)}
+          decimals={6}
+          symbol={"₳"}
+          hide={true}
+        />
+      </Center>
+    </Tooltip>
   );
 }
 
@@ -197,11 +232,19 @@ function Markup(props: { children: string }) {
           </Text>
         ),
         p: ({ children }) => <Text textStyle={"body"}>{children}</Text>,
-        a: ({ children }) => (
-          <Link textStyle={"body-link"} color={"tertiary.500"} as="span">
-            {children}
-          </Link>
-        ),
+        a: (props) => {
+          console.log(props.href);
+          return (
+            <Link
+              href={props.href}
+              textStyle={"body-link"}
+              color={"tertiary.500"}
+              target={"_blank"}
+            >
+              {props.children}
+            </Link>
+          );
+        },
       }}
     >
       {props.children}
@@ -213,6 +256,10 @@ function MetadataTab(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
   return (
     <VStack alignItems={"start"} spacing={4}>
       <MetadataSection name={"General"}>
+        <MetadataEntry
+          name={"collection"}
+          value={props.artworkData.collection}
+        />
         {props.artworkData.resolution ? (
           <>
             <MetadataEntry
