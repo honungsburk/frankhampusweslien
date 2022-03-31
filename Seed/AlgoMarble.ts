@@ -7,7 +7,7 @@ export const algomarble: Artwork[] = [
     collection: "AlgoMarble",
     saleInfo: {
       price: "25000000",
-      status: "Sold",
+      status: "Available",
     },
     src: "images/489.jpg",
     resolution: {

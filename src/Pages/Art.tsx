@@ -27,6 +27,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { SaleTag } from "../Components/SaleTag";
 import ToggleButton from "../Components/ToggleButton";
 import * as Firestore from "firebase/firestore";
+import { ToggleOptionGroup } from "../Components/ToggleGroup";
 
 const artCollectionQuery = collection(firebase.db, "art");
 const superQuery = Firestore.query(
@@ -34,8 +35,21 @@ const superQuery = Firestore.query(
   Firestore.where("saleInfo.status", "==", "Available")
 );
 
+const options: {
+  display: Artwork.ArtCollection;
+  value: Artwork.ArtCollection;
+}[] = Artwork.collections.map((v) => {
+  return {
+    display: v,
+    value: v,
+  };
+});
+
 export default function Art(): JSX.Element {
   const [forSale, { toggle }] = useBoolean(false);
+  const [collectionFilter, setCollectionFilter] = useState<
+    Artwork.ArtCollection | undefined
+  >(undefined);
   const [artQuery, setQuery] =
     useState<Firestore.Query<Firestore.DocumentData>>(artCollectionQuery);
   const { data, thereIsMore, loadMore, error } =
@@ -64,7 +78,11 @@ export default function Art(): JSX.Element {
             <StatusBar />
           </VStack>
           <VStack width={"100%"}>
-            <Flex>
+            <Flex width={"100%"}>
+              <ToggleOptionGroup
+                options={options}
+                onToggle={setCollectionFilter}
+              />
               <Spacer />
               <ToggleButton
                 isToggled={forSale}

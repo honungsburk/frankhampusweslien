@@ -43,7 +43,7 @@ export const fineart: Artwork[] = [
     name: "Rising Bull",
     saleInfo: {
       price: "100000000",
-      status: "Sold",
+      status: "Available",
     },
     description: "A bull rising with the sun.",
     collection: "Frank's Fine Forms",

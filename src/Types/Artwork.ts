@@ -13,6 +13,13 @@ export type Artwork = {
   token?: Token;
 };
 
+export const collections: ArtCollection[] = [
+  "MOTION",
+  "AlgoMarble",
+  "Stained Glass",
+  "Frank's Fine Forms",
+];
+
 export type ArtCollection =
   | "MOTION"
   | "AlgoMarble"

@@ -7,7 +7,7 @@ export const stainedGlass: Artwork[] = [
     collection: "Stained Glass",
     saleInfo: {
       price: "25000000",
-      status: "Sold",
+      status: "Available",
     },
     src: "images/64974370.svg",
     createdAt: timestampAt("2021-8-13"),
