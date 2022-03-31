@@ -11,6 +11,7 @@ export const fineart: Artwork[] = [
       x: 1700,
       y: 3000,
     },
+    tags: ["Krita", "Portrait", "Character", "Dishonored"],
     createdAt: timestampAt("2020-7-4"),
   },
   {
@@ -22,6 +23,7 @@ export const fineart: Artwork[] = [
       x: 2256,
       y: 2820,
     },
+    tags: ["Krita", "Landscape"],
     createdAt: timestampAt("2020-8-29"),
   },
   {
@@ -34,6 +36,7 @@ export const fineart: Artwork[] = [
       x: 6000,
       y: 4000,
     },
+    tags: ["Procreate", "Sweden", "Old School Cool"],
     createdAt: timestampAt("2021-8-28"),
   },
   {
@@ -49,6 +52,7 @@ export const fineart: Artwork[] = [
       x: 2048,
       y: 2732,
     },
+    tags: ["Bull", "Krita", "Animal"],
     createdAt: timestampAt("2021-5-1"),
     token: {
       policyID: "dd04ad427b8c2f76409502907063239518d81ad7415046e170d3da07",

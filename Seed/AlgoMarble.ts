@@ -14,6 +14,7 @@ export const algomarble: Artwork[] = [
       x: 2400,
       y: 1600,
     },
+    tags: ["Generative", "AlgoMarble"],
     createdAt: timestampAt("2021-9-8"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",
@@ -44,6 +45,7 @@ export const algomarble: Artwork[] = [
       x: 2400,
       y: 1600,
     },
+    tags: ["Generative", "AlgoMarble"],
     createdAt: timestampAt("2021-9-8"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",
@@ -74,6 +76,7 @@ export const algomarble: Artwork[] = [
       x: 2400,
       y: 1600,
     },
+    tags: ["Generative", "AlgoMarble"],
     createdAt: timestampAt("2021-9-8"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",
@@ -104,6 +107,7 @@ export const algomarble: Artwork[] = [
       x: 2400,
       y: 1600,
     },
+    tags: ["Generative", "AlgoMarble"],
     createdAt: timestampAt("2021-9-8"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",

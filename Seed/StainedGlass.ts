@@ -11,6 +11,7 @@ export const stainedGlass: Artwork[] = [
     },
     src: "images/64974370.svg",
     createdAt: timestampAt("2021-8-13"),
+    tags: ["Generative", "Stained Glass", "Triangles"],
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",
       assetName: "FHWALGOMARBLE0489",
@@ -36,6 +37,7 @@ export const stainedGlass: Artwork[] = [
       status: "Sold",
     },
     src: "images/85843737.svg",
+    tags: ["Generative", "Stained Glass", "Triangles"],
     createdAt: timestampAt("2021-8-13"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",
@@ -62,6 +64,7 @@ export const stainedGlass: Artwork[] = [
       status: "Sold",
     },
     src: "images/93700844.svg",
+    tags: ["Generative", "Stained Glass", "Triangles"],
     createdAt: timestampAt("2021-8-13"),
     token: {
       policyID: "fc7f00513d26a5c4de57a5863f0849559493d5ec008951eeb65ed3f1",

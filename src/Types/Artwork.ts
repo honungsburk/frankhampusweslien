@@ -7,6 +7,7 @@ export type Artwork = {
   description?: string;
   saleInfo?: SaleInfo;
   src: string;
+  tags: string[];
   resolution?: Resolution;
   createdAt: Timestamp;
   token?: Token;

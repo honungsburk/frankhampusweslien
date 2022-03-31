@@ -61,7 +61,7 @@ export default function Art(): JSX.Element {
                     name={data.name}
                     src={Artwork.thumbNailSrc(data.src)}
                     key={doc.id}
-                    tags={[]}
+                    tags={data.tags}
                   />
                 );
               })}
@@ -140,8 +140,8 @@ function ArtCard(props: {
           <Text textStyle={"body-bold"}>{props.name}</Text>
           <HStack>
             {props.tags.map((s, index) => (
-              <Text textStyle="small" textTransform={"uppercase"} key={index}>
-                {s}
+              <Text textStyle="xsmall" textTransform={"uppercase"} key={index}>
+                "{s}"
               </Text>
             ))}
           </HStack>
