@@ -5,7 +5,7 @@ export const fineart: Artwork[] = [
   {
     name: "Aristocrat",
     description: "A copy of another artist's work. It was made for practice.",
-    collection: "Frank's Fine Art",
+    collection: "Frank's Fine Forms",
     src: "images/Aristocrat-Dishonored.jpg",
     resolution: {
       x: 1700,
@@ -16,7 +16,7 @@ export const fineart: Artwork[] = [
   {
     name: "Magical Rocks",
     description: "A copy of another artist's work. It was made for practice.",
-    collection: "Frank's Fine Art",
+    collection: "Frank's Fine Forms",
     src: "images/Magical_Rocks.jpg",
     resolution: {
       x: 2256,
@@ -28,7 +28,7 @@ export const fineart: Artwork[] = [
     name: "Farsan",
     description:
       "This is a painting of an old photo of my dad who was a TV repair man at the time.",
-    collection: "Frank's Fine Art",
+    collection: "Frank's Fine Forms",
     src: "images/Farsan.jpg",
     resolution: {
       x: 6000,
@@ -43,7 +43,7 @@ export const fineart: Artwork[] = [
       status: "Sold",
     },
     description: "A bull rising with the sun.",
-    collection: "Frank's Fine Art",
+    collection: "Frank's Fine Forms",
     src: "images/Bull.jpg",
     resolution: {
       x: 2048,

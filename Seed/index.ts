@@ -1,9 +1,9 @@
 import admin from "firebase-admin"; // required
-import { algomarble } from "./Seed/AlgoMarble";
-import { fineart } from "./Seed/FineArt";
-import { stainedGlass } from "./Seed/StainedGlass";
-import { firebaseConfig } from "./src/secret.firebase";
-import { Artwork } from "./src/Types/Artwork";
+import { algomarble } from "./AlgoMarble";
+import { fineart } from "./FineArt";
+import { stainedGlass } from "./StainedGlass";
+import { firebaseConfig } from "../src/secret.firebase";
+import { Artwork } from "../src/Types/Artwork";
 
 const useEmulator = true;
 
@@ -43,8 +43,6 @@ async function uploadImages(path: string) {
   const origin = parts[0] + "/";
   if (extention !== "svg") {
     const lowResSrc = name + "_low_res.jpg";
-    console.log(seedDataFolder + lowResSrc);
-    console.log(origin + lowResSrc);
     bucket.upload(
       seedDataFolder + lowResSrc,
       createUploadMetadata(origin + lowResSrc)
@@ -58,15 +56,28 @@ async function uploadImages(path: string) {
 }
 
 async function seedDatabase(artworks: Artwork[]) {
+  console.log("Seeding the database ...");
   try {
     for (let artwork of artworks) {
-      console.log(artwork.src);
-      uploadImages(artwork.src);
-      await db.collection("art").add(artwork);
+      // Upload the images fist so we know all documents have the correct images
+      uploadImages(artwork.src)
+        .then(() => {
+          // Firebase doesn't allow you to upload using Firebase timestamps...
+          const uploadArwork: any = { ...artwork };
+          uploadArwork.createdAt = artwork.createdAt.toDate();
+          return db.collection("art").add(uploadArwork);
+        })
+        .then(() => console.log(artwork.collection + " - " + artwork.name))
+        .catch((err) => {
+          console.log("ERROR");
+          console.log(
+            `I was not able to seed ${artwork.name} from ${artwork.collection}`
+          );
+          console.log(err);
+        });
     }
-    console.log("database seed was successful");
   } catch (error) {
-    console.log(error, "database seed failed");
+    console.log(error, "Seeing the database failed");
   }
 }
 
