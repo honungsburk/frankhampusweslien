@@ -25,10 +25,6 @@ export function usePaginatedCollection<T>(
   const [thereIsMore, setThereIsMore] = useState(true);
   const [error, setError] = useState<any>(undefined);
 
-  // const dataVals = useMemo(() => {
-  //   return data.map((doc) => doc.data());
-  // }, [data]);
-
   // Callback to add more data
   const loadMore = useCallback(() => {
     if (fetching) {
@@ -41,7 +37,7 @@ export function usePaginatedCollection<T>(
     if (data.length > 0) {
       const lastVisible = data[data.length - 1];
       paginatedQuery = Firestore.query(
-        query,
+        paginatedQuery,
         Firestore.startAfter(lastVisible)
       );
     }
@@ -54,16 +50,20 @@ export function usePaginatedCollection<T>(
       })
       .catch((err) => setError(err))
       .finally(() => setFetching(false));
-
-  }, []);
-  // [data, fetching, query, limit]
+  }, [data, fetching, query, limit]);
 
   // Initally load data once
   useEffect(() => {
     setData([]);
     setThereIsMore(true);
-    loadMore();
   }, [query]);
+
+  // Initally load data once
+  useEffect(() => {
+    if (data.length === 0) {
+      loadMore();
+    }
+  }, [data, loadMore]);
 
   return {
     data: data,

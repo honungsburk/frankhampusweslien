@@ -19,25 +19,41 @@ import { collection } from "firebase/firestore";
 import { shadows } from "../Theme";
 import { Link as ReachLink } from "react-router-dom";
 import * as firebase from "../firebase";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ref, StorageReference } from "firebase/storage";
 import * as Artwork from "../Types/Artwork";
 import FirestoreImage from "../Components/FirestoreImage";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { SaleTag } from "../Components/SaleTag";
 import ToggleButton from "../Components/ToggleButton";
+import * as Firestore from "firebase/firestore";
 
-const query = collection(firebase.db, "art");
+const artCollectionQuery = collection(firebase.db, "art");
+const superQuery = Firestore.query(
+  artCollectionQuery,
+  Firestore.where("saleInfo.status", "==", "Available")
+);
 
 export default function Art(): JSX.Element {
-  const { data, thereIsMore, loadMore, error } =
-    firebase.usePaginatedCollection(20, query);
   const [forSale, { toggle }] = useBoolean(false);
+  const [artQuery, setQuery] =
+    useState<Firestore.Query<Firestore.DocumentData>>(artCollectionQuery);
+  const { data, thereIsMore, loadMore, error } =
+    firebase.usePaginatedCollection(20, artQuery);
 
   const nbrOfColumns = 5;
   const imageSize = 300;
 
   const dataInRows = makeRows(nbrOfColumns, data);
+  console.log(data);
+  useEffect(() => {
+    if (forSale) {
+      console.log("Filter!");
+      setQuery(superQuery);
+    } else {
+      setQuery(artCollectionQuery);
+    }
+  }, [forSale]);
 
   return (
     <Center>
