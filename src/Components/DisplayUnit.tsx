@@ -25,7 +25,8 @@ const UnitDisplay = React.forwardRef<any, UnitDisplayProps>(
               : "."}
             <span style={{ fontSize: "75%" }}>
               {hide ? removeTrailingZeros(subNum) : subNum}
-            </span>{" "}
+            </span>
+            &nbsp;
           </>
         ) : (
           "... "
