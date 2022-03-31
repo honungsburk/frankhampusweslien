@@ -22,58 +22,71 @@ import React from "react";
 import { ref, StorageReference } from "firebase/storage";
 import * as Artwork from "../Types/Artwork";
 import FirestoreImage from "../Components/FirestoreImage";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+const query = collection(firebase.db, "art");
 
 export default function Art(): JSX.Element {
-  const [value, loading, error] = useCollection(collection(firebase.db, "art"));
+  // const [value, loading, error] = useCollection(collection(firebase.db, "art"));
+  const { data, thereIsMore, loadMore, error } =
+    firebase.usePaginatedCollection(20, query);
 
-  let content = <></>;
+  const nbrOfColumns = 5;
+  const imageSize = 300;
 
-  if (error) {
-    content = (
-      <VStack>
-        <Text textStyle={"h2"}>Error</Text>
-        <Text textStyle={"body"}>{JSON.stringify(error)}</Text>
-      </VStack>
-    );
-  } else if (loading) {
-    content = (
-      <VStack>
-        <Spinner color="black" size="xl" thickness="8px" />
-        <Text fontSize={12} fontWeight={"bold"}>
-          LOADING...
-        </Text>
-      </VStack>
-    );
-  } else if (value) {
-    content = (
-      <SimpleGrid columns={4} spacing={4}>
-        {value.docs.map((doc) => {
-          const data = doc.data();
-          return (
-            <ArtCard
-              to={"./" + doc.id}
-              name={data.name}
-              src={Artwork.thumbNailSrc(data.src)}
-              key={doc.id}
-              tags={[]}
-            />
-          );
-        })}
-      </SimpleGrid>
-    );
-  }
+  const dataInRows = makeRows(nbrOfColumns, data);
 
   return (
-    <Container mt={8}>
+    <VStack mt={8}>
       <VStack>
-        <VStack maxW="md">
-          <SearchBar />
-          <StatusBar />
-        </VStack>
-        {content}
+        <SearchBar />
+        <StatusBar />
       </VStack>
-    </Container>
+      <InfiniteScroll
+        dataLength={dataInRows.length}
+        next={loadMore}
+        hasMore={thereIsMore}
+        loader={<Spinner color="black" size="xl" thickness="8px" />}
+      >
+        {dataInRows.map((row, index) => {
+          const superKey = row.map((doc) => doc.id).join("");
+          return (
+            <HStack key={superKey} pb={8} mx={1}>
+              {row.map((doc) => {
+                const data = doc.data();
+                return (
+                  <ArtCard
+                    imageSize={imageSize}
+                    to={"./" + doc.id}
+                    name={data.name}
+                    src={Artwork.thumbNailSrc(data.src)}
+                    key={doc.id}
+                    tags={[]}
+                  />
+                );
+              })}
+            </HStack>
+          );
+        })}
+      </InfiniteScroll>
+    </VStack>
   );
+}
+
+function makeRows<A>(columns: number, list: A[]): A[][] {
+  const result = [];
+
+  for (let i = 0; i < list.length; i = i + columns) {
+    const row = [];
+    for (let j = 0; j < columns; j++) {
+      if (i + j < list.length) {
+        row.push(list[i + j]);
+      }
+    }
+    result.push(row);
+  }
+
+  return result;
 }
 
 function SearchBar(): JSX.Element {
@@ -104,11 +117,13 @@ function Status(props: BoxProps): JSX.Element {
 }
 
 function ArtCard(props: {
+  imageSize: number;
   src: string;
   to: string;
   name: string;
   tags: string[];
 }): JSX.Element {
+  const imageSize = props.imageSize + "px";
   return (
     <Link as={ReachLink} to={props.to} _hover={{}}>
       <VStack
@@ -118,8 +133,8 @@ function ArtCard(props: {
         <FirestoreImage
           storageRef={ref(firebase.storage, props.src)}
           borderBottom={"4px"}
-          width="100%"
-          height={"100%"}
+          width={imageSize}
+          height={imageSize}
         />
         <VStack alignItems={"start"} width="100%" px="2" py="2">
           <Text textStyle={"body-bold"}>{props.name}</Text>

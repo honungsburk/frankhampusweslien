@@ -19,7 +19,7 @@ import * as Icons from "../Components/Icons";
 import ReactMarkdown from "react-markdown";
 import * as ArtworkT from "../Types/Artwork";
 import { mimeFromSrc } from "../Types/Mime";
-import { prettyResolution } from "../Types/Resolution";
+import { prettyResolution, Resolution } from "../Types/Resolution";
 import { ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { doc } from "firebase/firestore";
@@ -62,6 +62,11 @@ export default function Artwork(): JSX.Element {
           <ImageArea
             src={artworkData.src}
             tags={generateImageTags(artworkData)}
+            resolution={
+              artworkData.resolution
+                ? artworkData.resolution
+                : { x: 2000, y: 2000 }
+            }
           />
           <InfoArea artworkData={artworkData} />
         </HStack>
@@ -83,12 +88,20 @@ export default function Artwork(): JSX.Element {
 // Image Area
 ////////////////////////////////////////////////////////////////////////////////
 
-function ImageArea(props: { src: string; tags: string[] }): JSX.Element {
+function ImageArea(props: {
+  src: string;
+  tags: string[];
+  resolution: Resolution;
+}): JSX.Element {
   return (
-    <VStack width="fit-content" spacing={0}>
+    // width="fit-content"
+    <VStack spacing={0}>
       <FirestoreImage
         storageRef={ref(firebase.storage, ArtworkT.lowResSrc(props.src))}
         layerStyle="border-lg"
+        width={"100%"}
+        height={"100%"}
+        aspect-ratio="1 / 1"
       />
       <Flex width="100%">
         <Center>

@@ -29,12 +29,8 @@ export default function FirestoreImage(
   } else if (value) {
     content = <Image src={value} />;
   } else if (loading) {
-    content = (
-      <Center>
-        <Spinner color="black" size="xl" thickness="4px" speed="1s" />
-      </Center>
-    );
+    content = <Spinner color="black" size="xl" thickness="4px" speed="1s" />;
   }
 
-  return <Box {...rest}>{content}</Box>;
+  return <Center {...rest}>{content}</Center>;
 }
