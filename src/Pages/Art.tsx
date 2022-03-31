@@ -23,11 +23,11 @@ import { ref, StorageReference } from "firebase/storage";
 import * as Artwork from "../Types/Artwork";
 import FirestoreImage from "../Components/FirestoreImage";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { SaleTag } from "../Components/SaleTag";
 
 const query = collection(firebase.db, "art");
 
 export default function Art(): JSX.Element {
-  // const [value, loading, error] = useCollection(collection(firebase.db, "art"));
   const { data, thereIsMore, loadMore, error } =
     firebase.usePaginatedCollection(20, query);
 
@@ -62,6 +62,7 @@ export default function Art(): JSX.Element {
                     src={Artwork.thumbNailSrc(data.src)}
                     key={doc.id}
                     tags={data.tags}
+                    saleInfo={data.saleInfo}
                   />
                 );
               })}
@@ -121,6 +122,7 @@ function ArtCard(props: {
   src: string;
   to: string;
   name: string;
+  saleInfo?: Artwork.SaleInfo;
   tags: string[];
 }): JSX.Element {
   const imageSize = props.imageSize + "px";
@@ -130,12 +132,19 @@ function ArtCard(props: {
         layerStyle={"border-lg"}
         _hover={{ shadow: shadows.md, cursor: "pointer" }}
       >
-        <FirestoreImage
-          storageRef={ref(firebase.storage, props.src)}
-          borderBottom={"4px"}
-          width={imageSize}
-          height={imageSize}
-        />
+        <Box>
+          <Box position={"relative"} width="0px" height={"0px"}>
+            <Box position={"absolute"} left={"8px"} top={"8px"}>
+              <SaleTag saleInfo={props.saleInfo} size="sm" />
+            </Box>
+          </Box>
+          <FirestoreImage
+            storageRef={ref(firebase.storage, props.src)}
+            borderBottom={"4px"}
+            width={imageSize}
+            height={imageSize}
+          />
+        </Box>
         <VStack alignItems={"start"} width="100%" px="2" py="2">
           <Text textStyle={"body-bold"}>{props.name}</Text>
           <HStack>

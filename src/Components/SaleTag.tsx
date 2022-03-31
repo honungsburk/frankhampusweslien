@@ -7,12 +7,12 @@ export function SaleTag(props: {
   saleInfo?: Artwork.SaleInfo;
   size?: "sm" | "lg";
 }): JSX.Element {
-  let fontStyle = "body";
+  let textStyle = "body";
   let px = 4;
   let py = 2;
 
   if (props.size === "sm") {
-    fontStyle = "small";
+    textStyle = "small";
     px = 2;
     py = 1;
   }
@@ -30,10 +30,10 @@ export function SaleTag(props: {
             decimals={6}
             symbol={"₳"}
             hide={true}
-            fontStyle={fontStyle}
+            textStyle={textStyle}
           />
         ) : (
-          <Text fontStyle={fontStyle}>Not&nbsp;For&nbsp;Sale</Text>
+          <Text textStyle={textStyle}>Not&nbsp;For&nbsp;Sale</Text>
         )}
       </Center>
     </Tooltip>

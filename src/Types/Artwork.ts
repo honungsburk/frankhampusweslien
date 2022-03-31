@@ -37,7 +37,7 @@ export type SaleStatus = "Available" | "Reserved" | "Sold" | "Error";
  * @param s the saleStatus
  * @returns color to be used to communicate to the user of the state of the sale
  */
-export function saleStatusColor(saleStatus: SaleStatus): string {
+export function saleStatusColor(saleStatus?: SaleStatus): string {
   switch (saleStatus) {
     case "Available":
       return "success.500";
@@ -47,6 +47,8 @@ export function saleStatusColor(saleStatus: SaleStatus): string {
       return "secondary.500";
     case "Error":
       return "failure.500";
+    default:
+      return "accent.600";
   }
 }
 

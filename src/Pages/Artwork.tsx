@@ -29,8 +29,7 @@ import { ref, StorageReference } from "firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import FirestoreImage from "../Components/FirestoreImage";
 import * as CardanoUtil from "../Cardano/Util";
-import DisplayUnit from "../Components/DisplayUnit";
-import { BigNum } from "@emurgo/cardano-serialization-lib-browser";
+import { SaleTag } from "../Components/SaleTag";
 
 export default function Artwork(): JSX.Element {
   const { id } = useParams();
@@ -186,11 +185,7 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
         <Flex width={"100%"} alignItems="center">
           <Text textStyle={"h2"}>{props.artworkData.name}</Text>
           <Spacer />
-          {props.artworkData.saleInfo ? (
-            <SaleInfo saleInfo={props.artworkData.saleInfo} />
-          ) : (
-            <></>
-          )}
+          <SaleTag saleInfo={props.artworkData.saleInfo} size="lg" />
         </Flex>
         <Text textStyle={"body"}>{props.artworkData.collection}</Text>
       </VStack>
@@ -213,25 +208,6 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
         </TabPanels>
       </Tabs>
     </VStack>
-  );
-}
-
-function SaleInfo(props: { saleInfo: ArtworkT.SaleInfo }): JSX.Element {
-  return (
-    <Tooltip label={props.saleInfo.status}>
-      <Center
-        px={4}
-        py={2}
-        bg={ArtworkT.saleStatusColor(props.saleInfo.status)}
-      >
-        <DisplayUnit
-          quantity={BigNum.from_str(props.saleInfo.price)}
-          decimals={6}
-          symbol={"₳"}
-          hide={true}
-        />
-      </Center>
-    </Tooltip>
   );
 }
 
