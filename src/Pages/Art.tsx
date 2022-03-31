@@ -10,26 +10,29 @@ import {
   Image,
   Spinner,
   Link,
-  SimpleGrid,
-  ImageProps,
+  Flex,
+  Spacer,
+  useBoolean,
 } from "@chakra-ui/react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 import { shadows } from "../Theme";
 import { Link as ReachLink } from "react-router-dom";
 import * as firebase from "../firebase";
-import React from "react";
+import React, { useState } from "react";
 import { ref, StorageReference } from "firebase/storage";
 import * as Artwork from "../Types/Artwork";
 import FirestoreImage from "../Components/FirestoreImage";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { SaleTag } from "../Components/SaleTag";
+import ToggleButton from "../Components/ToggleButton";
 
 const query = collection(firebase.db, "art");
 
 export default function Art(): JSX.Element {
   const { data, thereIsMore, loadMore, error } =
     firebase.usePaginatedCollection(20, query);
+  const [forSale, { toggle }] = useBoolean(false);
 
   const nbrOfColumns = 5;
   const imageSize = 300;
@@ -37,40 +40,57 @@ export default function Art(): JSX.Element {
   const dataInRows = makeRows(nbrOfColumns, data);
 
   return (
-    <VStack mt={8}>
-      <VStack>
-        <SearchBar />
-        <StatusBar />
+    <Center>
+      <VStack mt={8} spacing={12}>
+        <VStack spacing={8} width={"100%"}>
+          <VStack>
+            <SearchBar />
+            <StatusBar />
+          </VStack>
+          <VStack width={"100%"}>
+            <Flex>
+              <Spacer />
+              <ToggleButton
+                isToggled={forSale}
+                onToggle={toggle}
+                colorScheme="secondary"
+              >
+                For Sale
+              </ToggleButton>
+            </Flex>
+            <BlackLine />
+          </VStack>
+        </VStack>
+        <InfiniteScroll
+          dataLength={dataInRows.length}
+          next={loadMore}
+          hasMore={thereIsMore}
+          loader={<Spinner color="black" size="xl" thickness="8px" />}
+        >
+          {dataInRows.map((row, index) => {
+            const superKey = row.map((doc) => doc.id).join("");
+            return (
+              <HStack key={superKey} pb={8} mx={1}>
+                {row.map((doc) => {
+                  const data = doc.data();
+                  return (
+                    <ArtCard
+                      imageSize={imageSize}
+                      to={"./" + doc.id}
+                      name={data.name}
+                      src={Artwork.thumbNailSrc(data.src)}
+                      key={doc.id}
+                      tags={data.tags}
+                      saleInfo={data.saleInfo}
+                    />
+                  );
+                })}
+              </HStack>
+            );
+          })}
+        </InfiniteScroll>
       </VStack>
-      <InfiniteScroll
-        dataLength={dataInRows.length}
-        next={loadMore}
-        hasMore={thereIsMore}
-        loader={<Spinner color="black" size="xl" thickness="8px" />}
-      >
-        {dataInRows.map((row, index) => {
-          const superKey = row.map((doc) => doc.id).join("");
-          return (
-            <HStack key={superKey} pb={8} mx={1}>
-              {row.map((doc) => {
-                const data = doc.data();
-                return (
-                  <ArtCard
-                    imageSize={imageSize}
-                    to={"./" + doc.id}
-                    name={data.name}
-                    src={Artwork.thumbNailSrc(data.src)}
-                    key={doc.id}
-                    tags={data.tags}
-                    saleInfo={data.saleInfo}
-                  />
-                );
-              })}
-            </HStack>
-          );
-        })}
-      </InfiniteScroll>
-    </VStack>
+    </Center>
   );
 }
 
@@ -88,6 +108,17 @@ function makeRows<A>(columns: number, list: A[]): A[][] {
   }
 
   return result;
+}
+
+function BlackLine(): JSX.Element {
+  return (
+    <Box
+      borderBottom={"4px solid"}
+      borderColor="black"
+      width={"100%"}
+      height="1px"
+    />
+  );
 }
 
 function SearchBar(): JSX.Element {
