@@ -68,7 +68,7 @@ export type ChainMetadata = {
 
 export function lowResSrc(src: string): string {
   const [path, ext] = src.split(".");
-  if (ext !== "svg") {
+  if (ext !== "svg" && ext !== "mp4") {
     return path + "_low_res.jpg";
   } else {
     return src;

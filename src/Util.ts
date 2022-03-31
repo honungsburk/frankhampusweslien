@@ -1,5 +1,19 @@
 /**
  *
+ * @param fileName the filename to get the extention from
+ * @returns either the extention or undefined
+ */
+export function findFileExtention(fileName: string): string | undefined {
+  const re = /(?:\.([^.]+))?$/;
+  const res = re.exec(fileName);
+  if (res) {
+    return res[1];
+  }
+  return undefined;
+}
+
+/**
+ *
  * @param length the length
  * @returns a random string of a given length
  */

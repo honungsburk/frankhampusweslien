@@ -22,7 +22,7 @@ import * as firebase from "../firebase";
 import React, { useEffect, useState } from "react";
 import { ref, StorageReference } from "firebase/storage";
 import * as Artwork from "../Types/Artwork";
-import FirestoreImage from "../Components/FirestoreImage";
+import FirestoreMedia from "../Components/FirestoreMedia";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { SaleTag } from "../Components/SaleTag";
 import ToggleButton from "../Components/ToggleButton";
@@ -59,15 +59,27 @@ export default function Art(): JSX.Element {
   const imageSize = 300;
 
   const dataInRows = makeRows(nbrOfColumns, data);
-  console.log(data);
   useEffect(() => {
+    let newQuery: Firestore.Query<Firestore.DocumentData> = artCollectionQuery;
+
+    // Filter for enabled
     if (forSale) {
-      console.log("Filter!");
-      setQuery(superQuery);
-    } else {
-      setQuery(artCollectionQuery);
+      newQuery = Firestore.query(
+        newQuery,
+        Firestore.where("saleInfo.status", "==", "Available")
+      );
     }
-  }, [forSale]);
+
+    if (collectionFilter) {
+      console.log("Collection filter");
+      newQuery = Firestore.query(
+        newQuery,
+        Firestore.where("collection", "==", collectionFilter)
+      );
+    }
+
+    setQuery(newQuery);
+  }, [forSale, collectionFilter]);
 
   return (
     <Center>
@@ -203,7 +215,7 @@ function ArtCard(props: {
               <SaleTag saleInfo={props.saleInfo} size="sm" />
             </Box>
           </Box>
-          <FirestoreImage
+          <FirestoreMedia
             storageRef={ref(firebase.storage, props.src)}
             borderBottom={"4px"}
             width={imageSize}

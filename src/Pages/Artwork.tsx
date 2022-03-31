@@ -27,9 +27,9 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import * as firebase from "../firebase";
 import { ref, StorageReference } from "firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
-import FirestoreImage from "../Components/FirestoreImage";
 import * as CardanoUtil from "../Cardano/Util";
 import { SaleTag } from "../Components/SaleTag";
+import FirestoreMedia from "../Components/FirestoreMedia";
 
 export default function Artwork(): JSX.Element {
   const { id } = useParams();
@@ -95,12 +95,13 @@ function ImageArea(props: {
   return (
     // width="fit-content"
     <VStack spacing={0}>
-      <FirestoreImage
+      <FirestoreMedia
         storageRef={ref(firebase.storage, ArtworkT.lowResSrc(props.src))}
         layerStyle="border-lg"
         width={"100%"}
         height={"100%"}
-        aspect-ratio="1 / 1"
+        muted
+        loop
       />
       <Flex width="100%">
         <Center>

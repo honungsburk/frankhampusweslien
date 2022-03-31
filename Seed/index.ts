@@ -4,6 +4,7 @@ import { fineart } from "./FineArt";
 import { stainedGlass } from "./StainedGlass";
 import { firebaseConfig } from "../src/secret.firebase";
 import { Artwork } from "../src/Types/Artwork";
+import { motion } from "./Motion";
 
 const useEmulator = true;
 
@@ -41,7 +42,8 @@ async function uploadImages(path: string) {
     .upload(seedDataFolder + fileName, createUploadMetadata(path));
 
   const origin = parts[0] + "/";
-  if (extention !== "svg") {
+  const extWithNoLowRes = ["svg", "mp4"];
+  if (!extWithNoLowRes.includes(extention)) {
     const lowResSrc = name + "_low_res.jpg";
     bucket.upload(
       seedDataFolder + lowResSrc,
@@ -81,6 +83,6 @@ async function seedDatabase(artworks: Artwork[]) {
   }
 }
 
-const artworks = algomarble.concat(fineart).concat(stainedGlass);
+const artworks = algomarble.concat(fineart).concat(stainedGlass).concat(motion);
 
 seedDatabase(artworks);
