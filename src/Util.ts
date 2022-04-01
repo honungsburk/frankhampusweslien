@@ -1,4 +1,20 @@
-/**
+/**TODO: needs tests
+ *
+ * @param start number to start from (inclusive)
+ * @param end number to end at (inclusive)
+ * @returns range including start and end
+ */
+export function range(start: number, end: number) {
+  if (start > end) {
+    return [];
+  }
+
+  return Array(end - start + 1)
+    .fill(0)
+    .map((_, idx) => start + idx);
+}
+
+/**TODO: needs tests
  *
  * @param fileName the filename to get the extention from
  * @returns either the extention or undefined

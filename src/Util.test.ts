@@ -1,6 +1,42 @@
 import * as Util from "./Util";
 
 ////////////////////////////////////////////////////////////////////////////////
+// Util.range
+////////////////////////////////////////////////////////////////////////////////
+
+test("Util.range(3, 8)", () => {
+  expect(Util.range(3, 8)).toStrictEqual([3, 4, 5, 6, 7, 8]);
+});
+
+test("Util.range(8, 8)", () => {
+  expect(Util.range(8, 8)).toStrictEqual([8]);
+});
+
+test("Util.range(8, 3)", () => {
+  expect(Util.range(8, 3)).toStrictEqual([]);
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Util.range
+////////////////////////////////////////////////////////////////////////////////
+
+test("Util.findFileExtention('movie.mp4')", () => {
+  expect(Util.findFileExtention("movie.mp4")).toStrictEqual("mp4");
+});
+
+test("Util.findFileExtention('filmer/movie.mp4')", () => {
+  expect(Util.findFileExtention("filmer/movie.mp4")).toStrictEqual("mp4");
+});
+
+test("Util.findFileExtention('fi.lmer/movie.mp4')", () => {
+  expect(Util.findFileExtention("fi.lmer/movie.mp4")).toStrictEqual("mp4");
+});
+
+test("Util.findFileExtention('fi.lmer.mov.ie.mp4')", () => {
+  expect(Util.findFileExtention("fi.lmer.mov.ie.mp4")).toStrictEqual("mp4");
+});
+
+////////////////////////////////////////////////////////////////////////////////
 // Util.makeID
 ////////////////////////////////////////////////////////////////////////////////
 

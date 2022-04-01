@@ -4,6 +4,8 @@ import { Resolution } from "./Resolution";
 export type Artwork = {
   name: string;
   collection: ArtCollection;
+  canUpdateCommunityName: boolean;
+  communityName?: string;
   description?: string;
   saleInfo?: SaleInfo;
   src: string;
@@ -32,25 +34,35 @@ export type Token = {
   onChainMetadata: ChainMetadata;
 };
 
-export type SaleInfo = {
+export type SaleInfo = ForSale | Gift;
+
+type Gift = {
+  status: "Gift";
+};
+
+type ForSale = {
   price: string;
   status: SaleStatus;
 };
 
-export type SaleStatus = "Available" | "Reserved" | "Sold" | "Error";
+export type SaleStatus = "Available" | "Reserved" | "Sold";
 
 /**
  *
  * @param s the saleStatus
  * @returns color to be used to communicate to the user of the state of the sale
  */
-export function saleStatusColor(saleStatus?: SaleStatus): string {
+export function saleStatusColor(
+  saleStatus?: SaleStatus | "Error" | "Gift"
+): string {
   switch (saleStatus) {
     case "Available":
       return "success.500";
     case "Reserved":
       return "primary.500";
     case "Sold":
+      return "secondary.500";
+    case "Gift":
       return "secondary.500";
     case "Error":
       return "failure.500";
