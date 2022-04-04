@@ -1,5 +1,51 @@
 import { Timestamp } from "firebase/firestore";
 import { Resolution } from "./Resolution";
+import * as yup from "yup";
+
+////////////////////////////////////////////////////////////////////////////////
+// NFT Metadata
+////////////////////////////////////////////////////////////////////////////////
+
+export type ChainMetadata = {
+  name: string;
+  image: string;
+  mediaType: string;
+  files: { src: string; name: string; mediaType: string }[];
+};
+
+const fileSchema = yup.object({
+  name: yup.string().defined(),
+  src: yup.string().defined(),
+  mediaType: yup.string().defined(),
+});
+
+// TODO: make the schema validation more aggressive?
+export const chainMetadataSchema: yup.ObjectSchema<ChainMetadata> = yup.object({
+  name: yup.string().defined(),
+  image: yup.string().defined(),
+  mediaType: yup.string().defined(),
+  files: yup.array().of(fileSchema).defined(),
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Token
+////////////////////////////////////////////////////////////////////////////////
+
+export type Token = {
+  policyID: string;
+  assetName: string;
+  onChainMetadata: ChainMetadata;
+};
+
+export const tokenSchema: yup.ObjectSchema<Token> = yup.object({
+  policyID: yup.string().defined(),
+  assetName: yup.string().defined(),
+  onChainMetadata: chainMetadataSchema.defined(),
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Artwork
+////////////////////////////////////////////////////////////////////////////////
 
 export type Artwork = {
   name: string;
@@ -27,12 +73,6 @@ export type ArtCollection =
   | "AlgoMarble"
   | "Stained Glass"
   | "Frank's Fine Forms";
-
-export type Token = {
-  policyID: string;
-  assetName: string;
-  onChainMetadata: ChainMetadata;
-};
 
 export type SaleInfo = ForSale | Gift;
 
@@ -70,13 +110,6 @@ export function saleStatusColor(
       return "accent.600";
   }
 }
-
-export type ChainMetadata = {
-  name: string;
-  image: string;
-  mediaType: string;
-  files: { src: string; name: string; mediaType: string }[];
-};
 
 export function lowResSrc(src: string): string {
   const [path, ext] = src.split(".");

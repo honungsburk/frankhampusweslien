@@ -4,10 +4,23 @@ import * as FineArt from "./FineArt";
 import * as Motion from "./Motion";
 import * as StainedGlass from "./StainedGlass";
 import { firebaseConfig } from "../src/secret.firebase";
-import { Artwork } from "../src/Types/Artwork";
+import {
+  Artwork,
+  Token,
+  chainMetadataSchema,
+  ChainMetadata,
+} from "../src/Types/Artwork";
 import * as yargs from "yargs";
 import * as Path from "path";
 import * as fs from "fs";
+import { TokenID } from "./Helpers";
+import * as BlockfrostEnv from "../Env/blockfrost.secrets";
+import * as Blockfrost from "@blockfrost/blockfrost-js";
+import * as Util from "../src/Util/Extra";
+
+const API = new Blockfrost.BlockFrostAPI({
+  projectId: BlockfrostEnv.env.mainnet,
+});
 
 type Env = {
   options: Options;
@@ -68,6 +81,30 @@ async function checkCanReadFile(path: string): Promise<boolean> {
 }
 
 /**
+ * Will throw error id the token doesn't exist!
+ *
+ * @param tokenID the token data to find
+ */
+async function findTokenData(tokenID: TokenID): Promise<Token> {
+  const assetID = tokenID.policyID + Util.hexEncode(tokenID.tokenName);
+  // console.log(tokenID.tokenName, assetID);
+  const data = await API.assetsById(assetID);
+
+  const onchainMetadata = chainMetadataSchema.validateSync(
+    data.onchain_metadata,
+    {
+      stripUnknown: true,
+    }
+  );
+
+  return {
+    policyID: tokenID.policyID,
+    assetName: tokenID.tokenName,
+    onChainMetadata: onchainMetadata as ChainMetadata,
+  };
+}
+
+/**
  *
  * @param conn Holds firebase connections
  * @param folderPath path to the LOCAL folder where the files are stored
@@ -105,14 +142,16 @@ async function uploadImages(
 function uploadData(
   conn: Connection,
   folderPath: string,
-  artworks: Artwork[]
+  artworks: Artwork[],
+  tokenID: (artwork: Artwork) => TokenID
 ): Promise<void>[] {
   return artworks.map(async (artwork) => {
+    const seedstring = "[SEED] " + artwork.collection + " - " + artwork.name;
     const shouldUpload = await checkCanReadFile(
       Path.join(folderPath, Path.basename(artwork.src))
     );
     if (shouldUpload) {
-      console.log("[SEED]", artwork.collection, "-", artwork.name);
+      console.log(seedstring);
       // Upload the images fist so we know all documents have the correct images
       try {
         await uploadImages(conn, folderPath, artwork.src);
@@ -120,14 +159,17 @@ function uploadData(
         // Firebase doesn't allow you to upload using Firebase timestamps...
         const uploadArwork: any = { ...artwork };
         uploadArwork.createdAt = artwork.createdAt.toDate();
+
+        try {
+          const token = await findTokenData(tokenID(artwork));
+          console.log(seedstring, ": FOUND TOKEN");
+          uploadArwork.token = token;
+        } catch (err: any) {
+          console.log(seedstring, ": NO TOKEN");
+        }
+
         await conn.db.collection("art").add(uploadArwork);
-        console.log(
-          "[SEED]",
-          artwork.collection,
-          "-",
-          artwork.name,
-          ": Success"
-        );
+        console.log(seedstring, ": Success");
       } catch (err: any) {
         console.log("ERROR");
         console.log(
@@ -136,14 +178,7 @@ function uploadData(
         console.log(err);
       }
     } else {
-      console.log(
-        "[SEED]",
-        "Skip",
-        artwork.collection,
-        "-",
-        artwork.name,
-        "(Missing File)"
-      );
+      console.log(seedstring, ": SKIP (Missing File)");
     }
   });
 }
@@ -245,7 +280,12 @@ async function run() {
   if (args["franks-fine-forms"]) {
     console.log("[SEED] 'Frank's Fine Forms'");
     uploads.concat(
-      uploadData(conn, args["franks-fine-forms"], FineArt.fineart)
+      uploadData(
+        conn,
+        args["franks-fine-forms"],
+        FineArt.fineart,
+        FineArt.possibleTokenID
+      )
     );
   }
 
