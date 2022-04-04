@@ -102,8 +102,12 @@ async function uploadImages(
 
 //console.log("Seeding the database ...");
 
-function uploadData(conn: Connection, folderPath: string, artworks: Artwork[]) {
-  artworks.map(async (artwork) => {
+function uploadData(
+  conn: Connection,
+  folderPath: string,
+  artworks: Artwork[]
+): Promise<void>[] {
+  return artworks.map(async (artwork) => {
     const shouldUpload = await checkCanReadFile(
       Path.join(folderPath, Path.basename(artwork.src))
     );
@@ -237,10 +241,21 @@ async function run() {
     await wipe(conn);
   }
 
+  const uploads: Promise<void>[] = [];
   if (args["franks-fine-forms"]) {
-    console.log("[SEED] 'Frank's Fine Forms''");
-    uploadData(conn, args["franks-fine-forms"], FineArt.fineart);
+    console.log("[SEED] 'Frank's Fine Forms'");
+    uploads.concat(
+      uploadData(conn, args["franks-fine-forms"], FineArt.fineart)
+    );
   }
+
+  // if (args.algomarble) {
+  //   console.log("[SEED] 'AlgoMarble'");
+  //   uploadData(conn, args.algomarble, AlgoMarble.algomarble());
+  // }
+
+  await Promise.all(uploads);
+  console.log("[SEED]", "Complete");
 }
 
 run();
