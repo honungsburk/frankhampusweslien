@@ -125,6 +125,7 @@ export default function Art(): JSX.Element {
                       to={"./" + doc.id}
                       name={data.name}
                       src={Artwork.thumbNailSrc(data.src)}
+                      communityName={data.communityName}
                       key={doc.id}
                       tags={data.tags}
                       saleInfo={data.saleInfo}
@@ -199,6 +200,7 @@ function ArtCard(props: {
   src: string;
   to: string;
   name: string;
+  communityName?: string;
   saleInfo?: Artwork.SaleInfo;
   tags: string[];
 }): JSX.Element {
@@ -223,7 +225,10 @@ function ArtCard(props: {
           />
         </Box>
         <VStack alignItems={"start"} width="100%" px="2" py="2">
-          <Text textStyle={"body-bold"}>{props.name}</Text>
+          <Text textStyle={"body-bold"}>
+            {props.name}{" "}
+            {props.communityName ? "(" + props.communityName + ")" : ""}
+          </Text>
           <HStack>
             {props.tags.map((s, index) => (
               <Text textStyle="xsmall" textTransform={"uppercase"} key={index}>

@@ -184,7 +184,12 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
     <VStack alignItems={"start"}>
       <VStack alignItems={"start"} spacing={-2} width={"100%"}>
         <Flex width={"100%"} alignItems="center">
-          <Text textStyle={"h2"}>{props.artworkData.name}</Text>
+          <Text textStyle={"h2"}>
+            {props.artworkData.name}{" "}
+            {props.artworkData.communityName
+              ? "(" + props.artworkData.communityName + ")"
+              : ""}
+          </Text>
           <Spacer />
           <SaleTag saleInfo={props.artworkData.saleInfo} size="lg" />
         </Flex>
@@ -250,6 +255,15 @@ function MetadataTab(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
           name={"collection"}
           value={props.artworkData.collection}
         />
+        <MetadataEntry name={"name"} value={props.artworkData.name} />
+        {props.artworkData.communityName ? (
+          <MetadataEntry
+            name={"community name"}
+            value={props.artworkData.communityName}
+          />
+        ) : (
+          <></>
+        )}
         {props.artworkData.resolution ? (
           <>
             <MetadataEntry
@@ -366,9 +380,7 @@ function MetadataEntry(props: {
 }): JSX.Element {
   return (
     <HStack spacing={8}>
-      <Text textStyle={"body"} width={"100px"}>
-        {props.name}
-      </Text>{" "}
+      <Text textStyle={"body"}>{props.name}</Text>{" "}
       {props.href ? (
         <HStack color={"tertiary.500"}>
           <Link textStyle={"link"} href={props.href} isExternal>
