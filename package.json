@@ -7,7 +7,8 @@
     "lint": "eslint --ext .js,.ts ./src",
     "lint-fix": "eslint --ext .js,.ts ./src --fix",
     "dev": "vite",
-    "seed": "ts-node -P ./tsconfig.tsnode.json ./Seed/index.ts",
+    "seed-dev": "ROARR_LOG=true ts-node -P ./tsconfig.tsnode.json ./Seed/index.ts --wipe --franks-fine-forms ./devSeedData --motion ./devSeedData --stained-glass ./devSeedData --algomarble ./devSeedData",
+    "seed": "ROARR_LOG=true ts-node -P ./tsconfig.tsnode.json ./Seed/index.ts",
     "test:unit": "vite-jest --no-cache",
     "build": "tsc && vite build",
     "build-debug": "tsc && vite build --mode debug",
@@ -35,6 +36,8 @@
     "react-markdown": "^8.0.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
+    "roarr": "^7.11.0",
+    "serialize-error": "^9.1.1",
     "web-vitals": "^1.1.2",
     "yup": "^1.0.0-beta.3"
   },

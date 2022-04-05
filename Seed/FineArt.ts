@@ -1,13 +1,6 @@
 import { Artwork } from "../src/Types/Artwork";
 import { adaToLovelace, timestampAt, TokenID } from "./Helpers";
 
-export const devArtworks = [
-  "Aristocrat",
-  "Magical Rocks",
-  "Farsan",
-  "Rising Bull",
-];
-
 /**
  *
  * @param artwork the artwork

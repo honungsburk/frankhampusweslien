@@ -17,6 +17,11 @@ import { TokenID } from "./Helpers";
 import * as BlockfrostEnv from "../Env/blockfrost.secrets";
 import * as Blockfrost from "@blockfrost/blockfrost-js";
 import * as Util from "../src/Util/Extra";
+import { Logger } from "./Logger";
+// I don't know why I just can't import it... seems like some transiplation issue
+// import { serializeError } from "serialize-error";
+
+const serializeError = (x: any) => x.toString();
 
 const API = new Blockfrost.BlockFrostAPI({
   projectId: BlockfrostEnv.env.mainnet,
@@ -51,12 +56,22 @@ const bucketName = "frank-hampus-weslien.appspot.com";
  * @returns the app and the db
  */
 function initApp(production: boolean = false): Connection {
+  const log = Logger.child({
+    namespace: "initApp",
+  });
+
   if (!production) {
     process.env["FIRESTORE_EMULATOR_HOST"] = "localhost:8080";
     process.env["FIREBASE_STORAGE_EMULATOR_HOST"] = "localhost:9199";
+  } else {
+    log.warn("Connect to production");
   }
+
+  log("Init App");
   const app = admin.initializeApp({ projectId: firebaseConfig.projectId });
+  log("Init Firestore");
   const db = admin.firestore(app);
+  log("Init Storage");
   const storage = admin.storage(app);
   return { app: app, db: db, storage: storage };
 }
@@ -87,7 +102,6 @@ async function checkCanReadFile(path: string): Promise<boolean> {
  */
 async function findTokenData(tokenID: TokenID): Promise<Token> {
   const assetID = tokenID.policyID + Util.hexEncode(tokenID.tokenName);
-  // console.log(tokenID.tokenName, assetID);
   const data = await API.assetsById(assetID);
 
   const onchainMetadata = chainMetadataSchema.validateSync(
@@ -137,8 +151,6 @@ async function uploadImages(
   );
 }
 
-//console.log("Seeding the database ...");
-
 function uploadData(
   conn: Connection,
   folderPath: string,
@@ -146,15 +158,20 @@ function uploadData(
   tokenID: (artwork: Artwork) => TokenID
 ): Promise<void>[] {
   return artworks.map(async (artwork) => {
-    const seedstring = "[SEED] " + artwork.collection + " - " + artwork.name;
+    const artworkLog = Logger.child({
+      namespace: "uploadData",
+      collection: artwork.collection,
+      name: artwork.name,
+    });
     const shouldUpload = await checkCanReadFile(
       Path.join(folderPath, Path.basename(artwork.src))
     );
     if (shouldUpload) {
-      console.log(seedstring);
       // Upload the images fist so we know all documents have the correct images
       try {
+        artworkLog.debug("Upload to bucket %s", artwork.src);
         await uploadImages(conn, folderPath, artwork.src);
+        artworkLog.debug("Success");
 
         // Firebase doesn't allow you to upload using Firebase timestamps...
         const uploadArwork: any = { ...artwork };
@@ -162,44 +179,57 @@ function uploadData(
 
         try {
           const token = await findTokenData(tokenID(artwork));
-          console.log(seedstring, ": FOUND TOKEN");
+          artworkLog.debug("Found Token");
           uploadArwork.token = token;
         } catch (err: any) {
-          console.log(seedstring, ": NO TOKEN");
+          artworkLog.debug("No Token");
         }
 
+        artworkLog.debug("Upload to Firebase");
         await conn.db.collection("art").add(uploadArwork);
-        console.log(seedstring, ": Success");
+        artworkLog.debug("Success");
       } catch (err: any) {
-        console.log("ERROR");
-        console.log(
-          `I was not able to seed ${artwork.name} from ${artwork.collection}`
+        artworkLog.error(
+          { error: serializeError(err) },
+          "could not upload data"
         );
-        console.log(err);
       }
     } else {
-      console.log(seedstring, ": SKIP (Missing File)");
+      artworkLog.debug("Could not find image - Skip");
     }
   });
 }
 
+const wipeLog = Logger.child({
+  namespace: "wipe",
+});
 /**
  * WARNING: Super dangerous function that will wipe all data!
  *
  * @param conn the firestore connection where to wipe all data
  */
 async function wipe(conn: Connection): Promise<void> {
-  console.log("[WIPING] Bucket...");
-  // Delete Bucket
-  await conn.storage.bucket(bucketName).deleteFiles({ prefix: "" });
-  console.log("[WIPING] Wiped bucket successfully!");
-
-  console.log("[WIPING] Firestore...");
-  const collections = await conn.db.listCollections();
-  for (let collection of collections) {
-    await conn.db.recursiveDelete(conn.db.collection(collection.path));
+  try {
+    wipeLog("Wiping bucket...");
+    // Delete Bucket
+    await conn.storage.bucket(bucketName).deleteFiles({ prefix: "" });
+    wipeLog("Wiped bucket successfully!");
+  } catch (err) {
+    wipeLog.error({ error: serializeError(err) }, "could not delete bucket");
+    throw err;
   }
-  console.log("[WIPING] Wiped firestore successfully!");
+
+  try {
+    wipeLog("Wiping Firestore...");
+    const collections = await conn.db.listCollections();
+    for (let collection of collections) {
+      await conn.db.recursiveDelete(conn.db.collection(collection.path));
+    }
+    wipeLog("Wiped firestore successfully!");
+  } catch (err) {
+    wipeLog.error({ error: serializeError(err) }, "could not delete firestore");
+    throw err;
+  }
 }
 
 const args: Options = yargs
@@ -267,18 +297,17 @@ const args: Options = yargs
 // TODO
 // * add proper logging
 async function run() {
-  console.log("[MODE]", args.production ? "PRODUCTION" : "EMULATOR");
-  console.log("[Initializing]");
+  Logger("Mode %s", args.production ? "PRODUCTION" : "EMULATOR");
   const conn = initApp(args.production);
 
   if (args.wipe && !args.production) {
-    console.log("[WIPING] Firestore and Storage...");
+    Logger("Wipe data...");
     await wipe(conn);
   }
 
   const uploads: Promise<void>[] = [];
   if (args["franks-fine-forms"]) {
-    console.log("[SEED] 'Frank's Fine Forms'");
+    Logger('Seed "Frank\'s Fine Forms"');
     uploads.concat(
       uploadData(
         conn,
@@ -289,13 +318,43 @@ async function run() {
     );
   }
 
+  if (args.motion) {
+    Logger('Seed "MOTION"');
+    uploads.concat(
+      uploadData(conn, args.motion, Motion.motion(), Motion.possibleTokenID)
+    );
+  }
+
+  if (args.algomarble) {
+    Logger('Seed "AlgoMarble"');
+    uploads.concat(
+      uploadData(
+        conn,
+        args.algomarble,
+        AlgoMarble.algomarble(),
+        AlgoMarble.possibleTokenID
+      )
+    );
+  }
+
+  if (args["stained-glass"]) {
+    Logger('Seed "Stained Glass"');
+    uploads.concat(
+      uploadData(
+        conn,
+        args["stained-glass"],
+        StainedGlass.stainedGlass(),
+        StainedGlass.possibleTokenID
+      )
+    );
+  }
+
   // if (args.algomarble) {
-  //   console.log("[SEED] 'AlgoMarble'");
   //   uploadData(conn, args.algomarble, AlgoMarble.algomarble());
   // }
 
   await Promise.all(uploads);
-  console.log("[SEED]", "Complete");
+  Logger("Done!");
 }
 
 run();
