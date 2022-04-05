@@ -12,6 +12,7 @@ import {
   ListIcon,
   Box,
   Button,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { BasicWallet } from "cardano-web-bridge-wrapper";
 import { Link as ReachLink } from "react-router-dom";
@@ -71,60 +72,78 @@ function HeroPage() {
   );
 }
 
+const projects: { name: string; description: string; href: string }[] = [
+  {
+    name: "Atomic Swap",
+    description: "A trustless escrow service on Cardano",
+    href: "https://atomic-swap.io/",
+  },
+  {
+    name: "Stained Glass",
+    description: "Generative art made by subdividing triangles",
+    href: "https://github.com/honungsburk/Stained-Glass",
+  },
+  {
+    name: "AlgoMarble",
+    description:
+      "Algoritmic marbling. Uses noise to create colorfull images with wonderfull texture.",
+    href: "https://github.com/honungsburk/AlgoMarble",
+  },
+  {
+    name: "This Website",
+    description: "This website is also open-source.",
+    href: "https://github.com/honungsburk/frankhampusweslien",
+  },
+  {
+    name: "cardano-web-bridge-wrapper",
+    description: "Convenience wrapper for the CIP-30 wallet API.",
+    href: "https://github.com/honungsburk/cardano-web-bridge-wrapper",
+  },
+  {
+    name: "motion",
+    description: "A simple and colourfull particle simulator.",
+    href: "https://github.com/honungsburk/MOTION",
+  },
+];
+
 function Projects() {
   return (
     <VStack spacing={8} id="projects">
       <Text textStyle={"h2"}>PROJECTS</Text>
-      <VStack spacing={4}>
-        <HStack
-          justifyItems={"center"}
-          justifyContent="space-between"
-          spacing={8}
-        >
-          <Project
-            name={"Atomic Swap"}
-            text="A trustless escrow service on Cardano"
-            href="https://atomic-swap.io/"
-          />
-          <Project
-            name={"Stained Glass"}
-            text="Generative art made by subdividing triangles"
-            href="https://github.com/honungsburk/Stained-Glass"
-          />
-          <Project
-            name={"AlgoMarble"}
-            text="Algoritmic marbling. Uses noise to create colorfull images with wonderfull texture."
-            href="https://github.com/honungsburk/AlgoMarble"
-          />
-        </HStack>
-        <HStack
-          justifyItems={"center"}
-          justifyContent="space-between"
-          spacing={8}
-        >
-          <Project
-            name={"This website"}
-            text="This website is also open-source."
-            href="https://github.com/honungsburk/frankhampusweslien"
-          />
-          <Project
-            name={"cardano-web-bridge-wrapper"}
-            text="Convenience wrapper for the CIP-30 wallet API."
-            href="https://github.com/honungsburk/cardano-web-bridge-wrapper"
-          />
-          <Project
-            name={"motion"}
-            text="A simple and colourfull particle simulator."
-            href="https://github.com/honungsburk/MOTION"
-          />
-        </HStack>
-      </VStack>
+      <SimpleGrid spacing={8} columns={[1, null, 2, null, 3]}>
+        {projects.map((p) => (
+          <Project {...p} />
+        ))}
+      </SimpleGrid>
       <LinkButton href="https://github.com/honungsburk" isExternal>
         View my github
       </LinkButton>
     </VStack>
   );
 }
+
+// function Projects() {
+//   return (
+//     <VStack spacing={8} id="projects">
+//       <Text textStyle={"h2"}>PROJECTS</Text>
+//       <VStack spacing={4}>
+//         <HStack
+//           justifyItems={"center"}
+//           justifyContent="space-between"
+//           spacing={8}
+//         ></HStack>
+//         <HStack
+//           justifyItems={"center"}
+//           justifyContent="space-between"
+//           spacing={8}
+//         ></HStack>
+//       </VStack>
+//       <LinkButton href="https://github.com/honungsburk" isExternal>
+//         View my github
+//       </LinkButton>
+//     </VStack>
+//   );
+// }
 
 function LinkButton(props: {
   href: string;
@@ -151,20 +170,28 @@ function LinkButton(props: {
   }
 }
 
-function Project(props: { name: string; text: string; href: string }) {
+function Project(props: { name: string; description: string; href: string }) {
+  const size: "sm" | "lg" | undefined = useBreakpointValue({
+    base: "sm",
+    md: "lg",
+  });
   return (
     <Link href={props.href} target="_blank" _hover={{}}>
       <Center
         bg="secondary.500"
         layerStyle={"shadow"}
         p="2"
-        width={"400px"}
-        height={"150px"}
+        width={["300px", null, "400px"]}
+        height={["112px", null, "150px"]}
         textAlign="center"
       >
         <VStack>
           <Text textStyle="h3">{props.name}</Text>
-          <Text textStyle="body">{props.text}</Text>
+          {size === "lg" ? (
+            <Text textStyle="body">{props.description}</Text>
+          ) : (
+            <></>
+          )}
         </VStack>
       </Center>
     </Link>
@@ -172,10 +199,18 @@ function Project(props: { name: string; text: string; href: string }) {
 }
 
 function AboutMe() {
+  const size: "sm" | "lg" | undefined = useBreakpointValue({
+    base: "sm",
+    md: "lg",
+  });
   return (
     <VStack id="about" w="100%" py={16} spacing={8}>
       <Text textStyle="h2">ABOUT Me</Text>
-      <HStack justifyItems={"center"} spacing={16}>
+      <SimpleGrid
+        justifyItems={"center"}
+        spacing={[8, null, 16]}
+        columns={[1, null, 2]}
+      >
         <VStack maxWidth={"400px"}>
           <Heading size={"xl"}>Who I am</Heading>
           <Text>
@@ -186,7 +221,7 @@ function AboutMe() {
           </Text>
         </VStack>
         <VStack maxWidth={"400px"}>
-          <Heading size={"xl"}>Who I do</Heading>
+          <Heading size={"xl"}>What I do</Heading>
           <List spacing={1}>
             <WhatIDo>Build open-source software</WhatIDo>
             <WhatIDo>Paint</WhatIDo>
@@ -194,7 +229,7 @@ function AboutMe() {
             <WhatIDo>Generative art</WhatIDo>
           </List>
         </VStack>
-      </HStack>
+      </SimpleGrid>
       <LinkButton href="/work">View my work history</LinkButton>
     </VStack>
   );
