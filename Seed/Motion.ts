@@ -2,8 +2,6 @@ import { Artwork } from "../src/Types/Artwork";
 import { adaToLovelace, timestampAt, TokenID } from "./Helpers";
 import * as Util from "../src/Util";
 
-export const devArtworks = ["MOTION-64"];
-
 /**
  *
  * @param artwork the artwork
