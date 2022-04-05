@@ -107,7 +107,7 @@ function ImageArea(props: {
         <Center>
           <HStack>
             {props.tags.map((s) => (
-              <ImageTag>{s}</ImageTag>
+              <ImageTag key={s}>{s}</ImageTag>
             ))}
           </HStack>
         </Center>
@@ -228,7 +228,6 @@ function Markup(props: { children: string }) {
         ),
         p: ({ children }) => <Text textStyle={"body"}>{children}</Text>,
         a: (props) => {
-          console.log(props.href);
           return (
             <Link
               href={props.href}
