@@ -14,6 +14,8 @@ import {
   TabPanel,
   Spinner,
   Tooltip,
+  SimpleGrid,
+  Box,
 } from "@chakra-ui/react";
 import * as Icons from "../Components/Icons";
 import ReactMarkdown from "react-markdown";
@@ -57,7 +59,13 @@ export default function Artwork(): JSX.Element {
     const artworkData = snapshot.data() as ArtworkT.Artwork | undefined;
     if (artworkData) {
       content = (
-        <HStack spacing={12} alignItems={"start"} maxW={"80%"} maxH={"80%"}>
+        <SimpleGrid
+          spacing={12}
+          alignItems={"start"}
+          maxW={["90%", null, "80%"]}
+          maxH={"80%"}
+          columns={[1, null, null, 2]}
+        >
           <ImageArea
             src={artworkData.src}
             tags={generateImageTags(artworkData)}
@@ -68,7 +76,7 @@ export default function Artwork(): JSX.Element {
             }
           />
           <InfoArea artworkData={artworkData} />
-        </HStack>
+        </SimpleGrid>
       );
     } else {
       content = (
@@ -201,14 +209,14 @@ function InfoArea(props: { artworkData: ArtworkT.Artwork }): JSX.Element {
           <Tab>METADATA</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel width={"600px"}>
+          <TabPanel>
             <Markup>
               {props.artworkData.description
                 ? props.artworkData.description
                 : ArtworkT.collectionDescription(props.artworkData)}
             </Markup>
           </TabPanel>
-          <TabPanel width={"600px"}>
+          <TabPanel overflowX={"auto"} maxW={["90vw", null, null, "45vw"]}>
             <MetadataTab artworkData={props.artworkData} />
           </TabPanel>
         </TabPanels>
@@ -379,7 +387,9 @@ function MetadataEntry(props: {
 }): JSX.Element {
   return (
     <HStack spacing={8}>
-      <Text textStyle={"body"}>{props.name}</Text>{" "}
+      <Text textStyle={"body"} width={"120px"}>
+        {props.name}
+      </Text>
       {props.href ? (
         <HStack color={"tertiary.500"}>
           <Link textStyle={"link"} href={props.href} isExternal>
