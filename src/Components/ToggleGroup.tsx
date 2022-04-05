@@ -21,6 +21,7 @@ export function ToggleOptionGroup<A>(props: ToggleGroupProps<A>): JSX.Element {
           borderTop: "2px solid",
           borderBottom: "2px solid",
           borderColor: "black",
+          key: index,
         };
 
         if (index === props.options.length - 1) {
