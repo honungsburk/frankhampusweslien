@@ -19,7 +19,7 @@ export function algomarble(): Artwork[] {
     return {
       name: name.toString().padStart(4, "0"),
       canUpdateCommunityName: true,
-      collection: "Stained Glass",
+      collection: "AlgoMarble",
       saleInfo: {
         price: adaToLovelace("25"),
         status: "Sold",
