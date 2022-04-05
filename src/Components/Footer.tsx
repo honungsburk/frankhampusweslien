@@ -1,27 +1,15 @@
-import {
-  Box,
-  HStack,
-  Icon,
-  IconProps,
-  Link,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, HStack, Icon, IconProps, Link } from "@chakra-ui/react";
 import * as Icons from "./Icons";
 
 export default function Footer() {
-  const layout: "vertical" | "horizontal" | undefined = useBreakpointValue({
-    base: "vertical",
-    sm: "horizontal",
-  });
-
   return (
     <Box
       as="footer"
       role="contentinfo"
       mx="auto"
       maxW="7xl"
-      pt="4"
-      pb={layout === "vertical" ? "20" : "4"}
+      pt={{ base: "20", sm: "4" }}
+      pb={{ base: "8", sm: "4" }}
       px={{ base: "4", md: "8" }}
     >
       <HStack spacing="4">
