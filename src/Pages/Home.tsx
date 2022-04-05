@@ -211,7 +211,7 @@ function AboutMe() {
         spacing={[8, null, 16]}
         columns={[1, null, 2]}
       >
-        <VStack maxWidth={"400px"}>
+        <VStack maxWidth={"400px"} px={2}>
           <Heading size={"xl"}>Who I am</Heading>
           <Text>
             I am a developer and artist who does everything from deploying
@@ -220,7 +220,7 @@ function AboutMe() {
             growing number of generative art projects.
           </Text>
         </VStack>
-        <VStack maxWidth={"400px"}>
+        <VStack maxWidth={"400px"} px={2}>
           <Heading size={"xl"}>What I do</Heading>
           <List spacing={1}>
             <WhatIDo>Build open-source software</WhatIDo>
