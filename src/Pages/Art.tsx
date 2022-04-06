@@ -28,6 +28,7 @@ import { SaleTag } from "../Components/SaleTag";
 import ToggleButton from "../Components/ToggleButton";
 import * as Firestore from "firebase/firestore";
 import { ToggleOptionGroup } from "../Components/ToggleGroup";
+import EmptyState from "../Components/EmptyState";
 
 const artCollectionQuery = collection(firebase.db, "art");
 const superQuery = Firestore.query(
@@ -83,7 +84,7 @@ export default function Art(): JSX.Element {
 
   return (
     <Center>
-      <VStack mt={8} spacing={12}>
+      <VStack mt={8} spacing={12} minW={"80%"}>
         <VStack spacing={8} width={"100%"}>
           <VStack>
             <SearchBar />
@@ -107,6 +108,11 @@ export default function Art(): JSX.Element {
             <BlackLine />
           </VStack>
         </VStack>
+        {dataInRows.length === 0 ? (
+          <EmptyState subText="Couldn't find any art matching your query :(" />
+        ) : (
+          <></>
+        )}
         <InfiniteScroll
           dataLength={dataInRows.length}
           next={loadMore}
