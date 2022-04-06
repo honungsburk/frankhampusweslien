@@ -18,6 +18,7 @@ import * as CIP30 from "cardano-web-bridge-wrapper/lib/CIP30";
 import { BasicWallet } from "cardano-web-bridge-wrapper/lib/BasicWallet";
 import colors from "../Theme/colors";
 import * as CardanoSerializationLib from "@emurgo/cardano-serialization-lib-browser";
+import EmptyState from "./EmptyState";
 
 export default function WalletSelector(props: {
   onWalletChange: (wallet: BasicWallet) => void;
@@ -51,21 +52,16 @@ export default function WalletSelector(props: {
         <ModalHeader>WALLETS</ModalHeader>
         <ModalCloseButton colorScheme={"whiteAlpha"} rounded={0} />
         <ModalBody>
-          <VStack width={"fill"}>
-            {walletChoices.length > 0 ? walletChoices : <NoWallet />}
+          <VStack width={"fill"} pb="4">
+            {walletChoices.length > 0 ? (
+              walletChoices
+            ) : (
+              <EmptyState subText="You do not have a Cardano Web Wallet installed :(" />
+            )}
           </VStack>
         </ModalBody>
       </ModalContent>
     </Modal>
-  );
-}
-
-function NoWallet() {
-  return (
-    <VStack>
-      <Heading>NO WALLET</Heading>
-      <Text>I couldn&apos;t find your wallet!</Text>
-    </VStack>
   );
 }
 
