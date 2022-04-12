@@ -13,6 +13,7 @@ import {
   Flex,
   Spacer,
   useBoolean,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
@@ -56,10 +57,6 @@ export default function Art(): JSX.Element {
   const { data, thereIsMore, loadMore, error } =
     firebase.usePaginatedCollection(20, artQuery);
 
-  const nbrOfColumns = 5;
-  const imageSize = 300;
-
-  const dataInRows = makeRows(nbrOfColumns, data);
   useEffect(() => {
     let newQuery: Firestore.Query<Firestore.DocumentData> = artCollectionQuery;
 
@@ -82,14 +79,16 @@ export default function Art(): JSX.Element {
     setQuery(newQuery);
   }, [forSale, collectionFilter]);
 
+  const nbrOfColumnsR = useBreakpointValue([2, null, 3, null, 5]);
+  const imageSizeR = useBreakpointValue([200, null, 250, null, 300]);
+  const nbrOfColumns = nbrOfColumnsR ? nbrOfColumnsR : 2;
+  const imageSize = imageSizeR ? imageSizeR : 200;
+  const dataInRows = makeRows(nbrOfColumns, data);
+
   return (
     <Center>
-      <VStack mt={8} spacing={12} minW={"80%"}>
+      <VStack mt={8} spacing={4} minW={"80%"}>
         <VStack spacing={8} width={"100%"}>
-          <VStack>
-            <SearchBar />
-            <StatusBar />
-          </VStack>
           <VStack width={"100%"}>
             <Flex width={"100%"}>
               <ToggleOptionGroup
@@ -108,6 +107,7 @@ export default function Art(): JSX.Element {
             <BlackLine />
           </VStack>
         </VStack>
+        <StatusBar />
         {dataInRows.length === 0 ? (
           <EmptyState subText="Couldn't find any art matching your query :(" />
         ) : (

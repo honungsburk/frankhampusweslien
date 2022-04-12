@@ -3,7 +3,7 @@ import * as AlgoMarble from "./AlgoMarble";
 import * as FineArt from "./FineArt";
 import * as Motion from "./Motion";
 import * as StainedGlass from "./StainedGlass";
-import { firebaseConfig } from "../src/secret.firebase";
+import { firebaseConfig } from "../Env/firebase.secrets";
 import {
   Artwork,
   Token,

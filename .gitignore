@@ -32,3 +32,5 @@ dist-ssr
 
 cardano-searialization-lib/
 secrets.*
+
+tsconfig.tsbuildinfo

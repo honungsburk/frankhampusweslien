@@ -47,45 +47,11 @@ export const tokenSchema: yup.ObjectSchema<Token> = yup.object({
 // Artwork
 ////////////////////////////////////////////////////////////////////////////////
 
-export type Artwork = {
-  name: string;
-  collection: ArtCollection;
-  canUpdateCommunityName: boolean;
-  communityName?: string;
-  description?: string;
-  saleInfo?: SaleInfo;
-  src: string;
-  tags: string[];
-  resolution?: Resolution;
-  createdAt: Timestamp;
-  token?: Token;
-};
-
-export const collections: ArtCollection[] = [
-  "MOTION",
-  "AlgoMarble",
-  "Stained Glass",
-  "Frank's Fine Forms",
-];
-
-export type ArtCollection =
-  | "MOTION"
-  | "AlgoMarble"
-  | "Stained Glass"
-  | "Frank's Fine Forms";
-
-export type SaleInfo = ForSale | Gift;
-
-type Gift = {
-  status: "Gift";
-};
-
-type ForSale = {
-  price: string;
-  status: SaleStatus;
-};
-
 export type SaleStatus = "Available" | "Reserved" | "Sold";
+
+export const saleStatusSchema: yup.StringSchema<SaleStatus> = yup
+  .mixed()
+  .oneOf(["Available", "Reserved", "Sold"]);
 
 /**
  *
@@ -110,6 +76,63 @@ export function saleStatusColor(
       return "accent.600";
   }
 }
+
+export type SaleInfo = ForSale | Gift;
+
+type Gift = {
+  status: "Gift";
+};
+
+type ForSale = {
+  price: string;
+  status: SaleStatus;
+};
+
+export const forSaleSchema: yup.ObjectSchema<ForSale> = yup.object({
+  price: yup.string().defined(),
+  status: saleStatusSchema.defined(),
+});
+
+export type Artwork = {
+  name: string;
+  collection: ArtCollection;
+  canUpdateCommunityName: boolean;
+  communityName?: string;
+  description?: string;
+  saleInfo?: SaleInfo;
+  src: string;
+  tags: string[];
+  resolution?: Resolution;
+  createdAt: Timestamp;
+  token?: Token;
+};
+
+// export const artworkSchema: yup.ObjectSchema<Artwork> = yup.object({
+//   name: yup.string().defined(),
+//   collection: yup.string().defined(),
+//   canUpdateCommunityName: yup.boolean().defined(),
+//   communityName?: yup.string().optional(),
+//   description?: yup.string().optional(),
+//   saleInfo?: SaleInfo;
+//   src: yup.string().defined(),
+//   tags: yup.array().of(yup.string()).defined(),
+//   resolution?: Resolution;
+//   createdAt: Timestamp;
+//   token?: tokenSchema.optional(),
+// });
+
+export const collections: ArtCollection[] = [
+  "MOTION",
+  "AlgoMarble",
+  "Stained Glass",
+  "Frank's Fine Forms",
+];
+
+export type ArtCollection =
+  | "MOTION"
+  | "AlgoMarble"
+  | "Stained Glass"
+  | "Frank's Fine Forms";
 
 export function lowResSrc(src: string): string {
   const [path, ext] = src.split(".");
