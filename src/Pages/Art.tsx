@@ -14,9 +14,14 @@ import {
   Spacer,
   useBoolean,
   useBreakpointValue,
+  Skeleton,
 } from "@chakra-ui/react";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { collection } from "firebase/firestore";
+import {
+  useCollection,
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
+import { collection, doc } from "firebase/firestore";
 import { shadows } from "../Theme";
 import { Link as ReachLink } from "react-router-dom";
 import * as firebase from "../firebase";
@@ -30,12 +35,10 @@ import ToggleButton from "../Components/ToggleButton";
 import * as Firestore from "firebase/firestore";
 import { ToggleOptionGroup } from "../Components/ToggleGroup";
 import EmptyState from "../Components/EmptyState";
+import { ArtCounter, artCounterSchema } from "../Types/ArtCounter";
 
 const artCollectionQuery = collection(firebase.db, "art");
-const superQuery = Firestore.query(
-  artCollectionQuery,
-  Firestore.where("saleInfo.status", "==", "Available")
-);
+const artStatDoc = doc(firebase.db, "application", "art-counter");
 
 const options: {
   display: Artwork.ArtCollection;
@@ -107,7 +110,7 @@ export default function Art(): JSX.Element {
             <BlackLine />
           </VStack>
         </VStack>
-        <StatusBar />
+        <StatusBarActive />
         {dataInRows.length === 0 ? (
           <EmptyState subText="Couldn't find any art matching your query :(" />
         ) : (
@@ -178,14 +181,67 @@ function SearchBar(): JSX.Element {
   return <Input variant="brutalist" placeholder="SEARCH..."></Input>;
 }
 
-function StatusBar(): JSX.Element {
+function StatusBarActive(): JSX.Element {
+  const [artStats, artStatsLoading, artStatsErr, snapshot] =
+    useDocumentData(artStatDoc);
+
+  let validArtStats: ArtCounter | undefined = undefined;
+  let validationError = true;
+  try {
+    validArtStats = artCounterSchema.validateSync(artStats);
+  } catch (err: any) {
+    validationError = err;
+  }
+
+  if (validArtStats) {
+    return (
+      <StatusBar
+        total={validArtStats.total}
+        available={validArtStats.available}
+        reserved={validArtStats.reserved}
+        sold={validArtStats.sold}
+        error={validArtStats.error}
+        notForSale={validArtStats.notForSale}
+      />
+    );
+  } else if (artStatsLoading) {
+    return (
+      <Skeleton>
+        <StatusBar
+          total={1010}
+          available={200}
+          reserved={10}
+          sold={700}
+          error={0}
+          notForSale={50}
+        />
+      </Skeleton>
+    );
+  } else {
+    return <Text textStyle={"body"}>Error: Could not load stats</Text>;
+  }
+}
+
+function StatusBar(props: {
+  total: number;
+  available: number;
+  reserved: number;
+  sold: number;
+  error: number;
+  notForSale: number;
+}): JSX.Element {
   return (
     <HStack>
-      <Status bg="accent.600">total: 816</Status>
-      <Status bg="success.200">available: 69</Status>
-      <Status bg="primary.500">reserved: 0</Status>
-      <Status bg="secondary.500">Sold: 700</Status>
-      <Status bg="accent.600">not for sale: 14</Status>
+      <Status bg="accent.600">total: {props.total}</Status>
+      <Status bg="success.200">available: {props.available}</Status>
+      <Status bg="primary.500">reserved: {props.reserved}</Status>
+      <Status bg="secondary.500">Sold: {props.sold}</Status>
+      <Status bg="accent.600">not for sale: {props.notForSale}</Status>
+      {props.error > 0 ? (
+        <Status bg="accent.600">not for sale: {props.notForSale}</Status>
+      ) : (
+        <></>
+      )}
     </HStack>
   );
 }

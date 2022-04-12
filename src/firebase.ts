@@ -1,6 +1,6 @@
 import * as firebase from "firebase/app";
 import * as Firestore from "firebase/firestore";
-import { firebaseConfig } from "./secret.firebase";
+import { firebaseConfig } from "../Env/firebase.secrets";
 import * as Storage from "firebase/storage";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Query } from "firebase/firestore";
