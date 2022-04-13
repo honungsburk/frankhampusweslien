@@ -93,6 +93,12 @@ export const forSaleSchema: yup.ObjectSchema<ForSale> = yup.object({
   status: saleStatusSchema.defined(),
 });
 
+export type CommunityName = {
+  name: string;
+  userID: string;
+  createdAt: Timestamp;
+};
+
 export type Artwork = {
   name: string;
   collection: ArtCollection;

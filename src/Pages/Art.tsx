@@ -15,6 +15,7 @@ import {
   useBoolean,
   useBreakpointValue,
   Skeleton,
+  Select,
 } from "@chakra-ui/react";
 import {
   useCollection,
@@ -94,10 +95,28 @@ export default function Art(): JSX.Element {
         <VStack spacing={8} width={"100%"}>
           <VStack width={"100%"}>
             <Flex width={"100%"}>
-              <ToggleOptionGroup
-                options={options}
-                onToggle={setCollectionFilter}
-              />
+              <Select
+                placeholder="Show All"
+                width={"-moz-fit-content"}
+                variant="brutalist"
+                textStyle={"button"}
+                onChange={(newV) => {
+                  const v = newV.target.value;
+                  if (
+                    Artwork.collections.includes(v as Artwork.ArtCollection)
+                  ) {
+                    setCollectionFilter(v as Artwork.ArtCollection);
+                  } else {
+                    setCollectionFilter(undefined);
+                  }
+                }}
+              >
+                {options.map((opt) => (
+                  <option value={opt.value} key={opt.value}>
+                    {opt.value}
+                  </option>
+                ))}
+              </Select>
               <Spacer />
               <ToggleButton
                 isToggled={forSale}
@@ -177,16 +196,12 @@ function BlackLine(): JSX.Element {
   );
 }
 
-function SearchBar(): JSX.Element {
-  return <Input variant="brutalist" placeholder="SEARCH..."></Input>;
-}
-
 function StatusBarActive(): JSX.Element {
   const [artStats, artStatsLoading, artStatsErr, snapshot] =
     useDocumentData(artStatDoc);
 
   let validArtStats: ArtCounter | undefined = undefined;
-  let validationError = true;
+  let validationError: any = undefined;
   try {
     validArtStats = artCounterSchema.validateSync(artStats);
   } catch (err: any) {
@@ -217,8 +232,10 @@ function StatusBarActive(): JSX.Element {
         />
       </Skeleton>
     );
+  } else if (artStatsErr) {
+    return <Text textStyle={"body"}>Error: {artStatsErr.toString()}</Text>;
   } else {
-    return <Text textStyle={"body"}>Error: Could not load stats</Text>;
+    return <Text textStyle={"body"}>Error: {validationError.toString()}</Text>;
   }
 }
 

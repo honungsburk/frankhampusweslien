@@ -18,8 +18,35 @@ export default function FAQ(): JSX.Element {
     <Container maxW="container.lg">
       <VStack mt={8} spacing={4}>
         <AtomicSwapAd />
-        <FAQItem header="is it safe to buy nfts">
-          <Text>Totaly, it is super safe</Text>
+        <FAQItem header="How does buying an NFT work?">
+          <Text>
+            Everything happens in one transaction. You will pay the requested
+            amount of ADA and receive the minted token without any waiting time.
+            This is done using multisignatures, a technique I've used when
+            building Atomic Swap. This means that it is virtually impossible to
+            loose funds or accidentally send the wrong amount. Everything
+            happens programatically, and you will be able to confirm that you
+            will receive the token you are expecting before signing.
+          </Text>
+        </FAQItem>
+        <FAQItem header="What if a transaction fails?">
+          <Text>
+            If a transaction would fails nothing happens. Since everything
+            happens in one transaction no fund have been moved from your wallet.{" "}
+          </Text>
+        </FAQItem>
+        <FAQItem header="Does the NFTs have any utility?">
+          <Text>
+            Every NFT can be assigned a community name by the current owner that
+            is displayed on this website (but it not part of the NFT metadata).
+            Collectors can also see their rank based on the number of NFTs they
+            own.
+          </Text>
+          <Text>
+            My next collection 'AutoTile' will be in part based on previous NFTs
+            and some of the owners will be able to mint NFTs for free (but
+            you'll pay for the transaction fee).
+          </Text>
         </FAQItem>
       </VStack>
     </Container>

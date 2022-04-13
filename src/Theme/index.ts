@@ -7,6 +7,7 @@ import button from "./components/button";
 import tabs from "./components/tabs";
 import { textStyles } from "./TextStyles";
 import toggleButton from "./components/toggleButton";
+import select from "./components/select";
 
 const global = (props: Dict<any>) => ({
   body: {
@@ -51,6 +52,7 @@ export const Theme = extendTheme({
     Button: button,
     Tabs: tabs,
     ToggleButton: toggleButton,
+    Select: select,
   },
   colors: colors,
   privateShadows,
