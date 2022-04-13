@@ -118,11 +118,7 @@ export default function Art(): JSX.Element {
                 ))}
               </Select>
               <Spacer />
-              <ToggleButton
-                isToggled={forSale}
-                onToggle={toggle}
-                colorScheme="secondary"
-              >
+              <ToggleButton isToggled={forSale} onToggle={toggle}>
                 For Sale
               </ToggleButton>
             </Flex>

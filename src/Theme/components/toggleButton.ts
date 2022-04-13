@@ -15,19 +15,12 @@ const toggleButton: ComponentStyleConfig = {
   baseStyle: (props) => {
     const { colorScheme: c, isToggled, theme } = props;
 
-    const notToggled = "accent";
-    const baseColor = c ? c : "primary";
-
-    let bg = `${baseColor}.500`;
-    let hoverbg = `${baseColor}.600`;
-    let clickbg = `${baseColor}.700`;
+    let bg = c ? `${c}.500` : "black";
     let color = textColor(theme, bg);
 
     if (!isToggled) {
-      bg = `${notToggled}.500`;
-      hoverbg = `${notToggled}.600`;
-      clickbg = `${notToggled}.800`;
-      color = textColor(theme, bg);
+      bg = "none";
+      color = "black";
     }
 
     return {
@@ -38,12 +31,6 @@ const toggleButton: ComponentStyleConfig = {
       cursor: "pointer",
       bg: bg,
       color: color,
-      _hover: {
-        bg: hoverbg,
-      },
-      _active: {
-        bg: clickbg,
-      },
       ...textStyles.button,
     };
   },
