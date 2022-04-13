@@ -14,6 +14,11 @@ export function possibleTokenID(artwork: Artwork): TokenID {
   };
 }
 
+const wasNotSold = new Set([
+  457, 448, 437, 431, 418, 416, 415, 395, 376, 367, 354, 323, 306, 302, 282,
+  271, 270, 259, 236, 162, 152, 127, 109, 103, 83, 66, 61, 49,
+]);
+
 export function algomarble(): Artwork[] {
   return Util.range(0, 511).map((name) => {
     return {
@@ -22,7 +27,7 @@ export function algomarble(): Artwork[] {
       collection: "AlgoMarble",
       saleInfo: {
         price: adaToLovelace("25"),
-        status: "Sold",
+        status: wasNotSold.has(name) ? "Expired" : "Sold",
       },
       resolution: {
         x: 2400,

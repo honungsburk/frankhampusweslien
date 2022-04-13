@@ -47,11 +47,11 @@ export const tokenSchema: yup.ObjectSchema<Token> = yup.object({
 // Artwork
 ////////////////////////////////////////////////////////////////////////////////
 
-export type SaleStatus = "Available" | "Reserved" | "Sold";
+export type SaleStatus = "Available" | "Reserved" | "Sold" | "Expired";
 
 export const saleStatusSchema: yup.StringSchema<SaleStatus> = yup
   .mixed()
-  .oneOf(["Available", "Reserved", "Sold"]);
+  .oneOf(["Available", "Reserved", "Sold", "Expired"]);
 
 /**
  *
