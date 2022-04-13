@@ -43,6 +43,8 @@ export const artStatusCounter = functions.firestore
           counter.reserved -= 1;
         } else if (status === "Sold") {
           counter.sold -= 1;
+        } else if (status === "Expired") {
+          counter.expired -= 1;
         } else {
           counter.notForSale -= 1;
         }
@@ -59,6 +61,8 @@ export const artStatusCounter = functions.firestore
           counter.reserved += 1;
         } else if (status === "Sold") {
           counter.sold += 1;
+        } else if (status === "Expired") {
+          counter.expired += 1;
         } else {
           counter.notForSale += 1;
         }

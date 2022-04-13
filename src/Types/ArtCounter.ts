@@ -8,6 +8,7 @@ export type ArtCounter = {
   total: number;
   available: number;
   reserved: number;
+  expired: number;
   sold: number;
   notForSale: number;
   error: number;
@@ -26,6 +27,7 @@ export const artCounterSchema: yup.ObjectSchema<ArtCounter> = yup.object({
   total: nonNegativeNumber,
   available: nonNegativeNumber,
   reserved: nonNegativeNumber,
+  expired: nonNegativeNumber,
   sold: nonNegativeNumber,
   notForSale: nonNegativeNumber,
   error: nonNegativeNumber,
@@ -36,6 +38,7 @@ export function artCounterInit(): ArtCounter {
     total: 0,
     available: 0,
     reserved: 0,
+    expired: 0,
     sold: 0,
     notForSale: 0,
     error: 0,
@@ -48,6 +51,7 @@ export function eq(l: ArtCounter, r: ArtCounter): boolean {
     l.error === r.error &&
     l.notForSale === r.notForSale &&
     l.reserved === r.reserved &&
+    l.expired === r.expired &&
     l.sold === r.sold &&
     l.total === r.total
   );
