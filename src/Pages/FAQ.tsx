@@ -32,7 +32,7 @@ export default function FAQ(): JSX.Element {
         <FAQItem header="What if a transaction fails?">
           <Text>
             If a transaction would fails nothing happens. Since everything
-            happens in one transaction no fund have been moved from your wallet.{" "}
+            happens in one transaction no fund have been moved from your wallet.
           </Text>
         </FAQItem>
         <FAQItem header="Does the NFTs have any utility?">
@@ -46,6 +46,13 @@ export default function FAQ(): JSX.Element {
             My next collection 'AutoTile' will be in part based on previous NFTs
             and some of the owners will be able to mint NFTs for free (but
             you'll pay for the transaction fee).
+          </Text>
+        </FAQItem>
+
+        <FAQItem header="Which wallets can I use?">
+          <Text>
+            Any web wallet that supports the CIP30 wallet bridge api: Nami,
+            Flint,
           </Text>
         </FAQItem>
       </VStack>
