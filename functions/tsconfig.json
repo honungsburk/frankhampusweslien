@@ -19,7 +19,7 @@
   },
   "include": [
     ".",
-    "../Env/firebase.secrets.ts",
+    "../Env/firebase.secrets.js",
     "../src/Types/*"
   ],
 }

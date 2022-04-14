@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 tmp/
-*secret.*
-*secrets.*
+*secret.[jt]s*
+*secrets.[jt]s*
 
 node_modules
 dist
