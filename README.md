@@ -18,11 +18,18 @@ the CLI tool `npm install @roarr/cli -g`
 npm run seed -- --wipe --franks-fine-forms ./devSeedData --motion ./devSeedData --stained-glass ./devSeedData --algomarble ./devSeedData | roarr pretty-print
 ```
 
+## Javascript vs Typescript
+
+The app uses typescript as much as possible but for some parts (like testing firebase rules)
+writing the tests in typescript doesn't have any significant upside while it is a bit complicated
+to set up the compilation. When a file is in javascript it is most likely because it is was easier.
+
 ## TODO:
 
 ### V1
 
-- [ ] Add rules to firestore
+- [ x ] Add rules to firestore
+- [ x ] Add rules to storage
 - [ x ] Add quering and filtering
 - [ x ] Add price info to images
 - [ x ] Add dev images to git lfs
@@ -35,7 +42,6 @@ npm run seed -- --wipe --franks-fine-forms ./devSeedData --motion ./devSeedData 
 - [ x ] assetID
 - [ x ] link to cardano scan
 - [ x ] created time
-- [ ] Firebase local search
 - [ x ] Add filter
 - [ x ] Add load images on scroll
 - [ x ] Add tags
@@ -51,14 +57,27 @@ npm run seed -- --wipe --franks-fine-forms ./devSeedData --motion ./devSeedData 
 - [ ] Art page
 - [ x ] Individual artwork pages
 - [ ] Script to upload all data
-- [ ] shallow art data + deep art data
-- [ ] Configure verbose level on script
+- [ x ] Configure verbose level on script
+- [ x ] Cloud function to track number of artworks and their state
+- [ ] cloud function to delete unused files???
+- [ x ] Add unit tests for security rules
+- [ ] Test cloud functions
+- [ ] Add integrations tests
+- [ ] Add more filter + sorting options in /art
+- [ x ] Why stats not load?
+- [ ] Why images not load
+- [ ] Script to fill entire database with data
 
 ### V2
 
-- [ ] Project Pages???
+- [ ] Community names
+- [ ] Collectors page
 - [ ] Buy new collection
 - [ ] Reward page
-- [ ] Community names
+- [ ] Project Pages???
+
+### Future
+
+- [ ] More collections
 - [ ] Add a twitter bot!
 - [ ] Add a dsicord bot!
