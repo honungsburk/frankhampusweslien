@@ -51,3 +51,13 @@ test("Check that a user can not upload files under 'images/'", async () => {
     .put(Uint8Array.of(2, 1, 2, 34, 6, 61234, 12344, 32, 21, 3, 4, 5));
   await assertFails(desertRef);
 });
+
+afterEach(async () => {
+  const env = await testEnv;
+  env.clearStorage();
+});
+
+afterAll(async () => {
+  const env = await testEnv;
+  env.cleanup();
+});
