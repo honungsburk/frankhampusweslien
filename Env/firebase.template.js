@@ -1,5 +1,5 @@
 // Your web app's Firebase configuration
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "***",
   authDomain: "***",
   projectId: "***",
@@ -7,3 +7,5 @@ export const firebaseConfig = {
   messagingSenderId: "***",
   appId: "***",
 };
+
+module.exports.firebaseConfig = firebaseConfig;
